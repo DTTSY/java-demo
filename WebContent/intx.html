@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>汽车租赁系统</title>
+<meta name="viewport"
+	content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<link rel="stylesheet" type="text/css" href="static/css/elementUI.css">
+<link rel="stylesheet" href="static/css/index.css">
+<script src="static/js/axios.min.js"></script>
+<script src="static/js/jquery.min.js"></script>
+<script src="static/js/vue.min.js"></script>
+<script src="static/js/elementUI.js"></script>
+</head>
+<body>
+	<div id="app">
+		<template>
+            <el-container> <el-header><h1 id="title">Header</h1></el-header>
+                <el-main>
+                    <el-row>
+                        <el-col :span="5" v-for="(o, index) in 3" :key="o" :offset="index > 0 ? 3 : 0">
+                          <el-card :body-style="{ padding: '0px' }">
+                            <img src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png" class="image">
+                            <div style="padding: 14px;">
+                              <span>好吃的汉堡</span>
+                              <div class="bottom clearfix">
+                                <!-- <time class="time" >{{ currentDate }}</time> -->
+                                <el-button type="text" class="button">操作按钮</el-button>
+                              </div>
+                            </div>
+                          </el-card>
+                        </el-col>
+                      </el-row>
+                </el-main>
+			</el-container>
+		</template>
+	</div>
+	<script src="static/js/index.js"></script>
+</body>
+</html>

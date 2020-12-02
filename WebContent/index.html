@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<title>登陆</title>
+</head>
+<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+<link rel="stylesheet" href="static/css/d_index.css">
+<script src="static/js/jquery.min.js"></script>
+<script src="static/js/vue.min.js"></script>
+<script src="static/js/elementUI.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+<body>
+    <div id="app">
+        <template>
+            <el-container>
+                <el-header height= "200px">
+                    <H1 id="title">汽车租赁系统</H1>
+                </el-header>
+                <el-main>
+                    <div id="form">
+                        <el-card class="box-card" shadow="hover">
+                            
+                                <el-switch v-model="login" active-color="#13ce66" active-text="登录"
+                                    inactive-text="注册"> inactive-color="#ff4949">
+                                </el-switch>
+
+                        <el-form v-show="login" :model="loginForm" label-position="top" size="medium" status-icon :rules="rules" ref="loginForm" label-width="80px">
+                            <el-form-item label="账号" prop="name">
+                            <el-input suffix-icon="el-icon-user" type="input" v-model="loginForm.name" autocomplete="off"></el-input>
+                            </el-form-item>
+                            <el-form-item label="密码" prop="psw">
+                            <el-input  type="password" v-model="loginForm.psw" autocomplete="off" show-password></el-input>
+                            </el-form-item>
+                            <el-form-item>
+                            <el-button type="primary" @click="submitForm('loginForm')" >登录</el-button>
+                            <el-button @click="resetForm('loginForm')">重置</el-button>
+                            </el-form-item>
+                        </el-form>
+
+                        <el-form v-show="!login" :model="singnUpForm" label-position="top" size="medium" status-icon :rules="rules" ref="singnUpForm" label-width="80px">
+                            <el-form-item label="账号" prop="name">
+                                <el-input suffix-icon="el-icon-user" type="input" v-model="singnUpForm.name" autocomplete="off"></el-input>
+                            </el-form-item>
+                            <el-form-item label="密码" prop="psw">
+                                <el-input   type="password" v-model="singnUpForm.psw" autocomplete="off" show-password></el-input>
+                            </el-form-item>
+                            <el-form-item label="确认密码" prop="checkPass">
+                                <el-input   type="password" v-model="singnUpForm.checkPass" autocomplete="off" show-password></el-input>
+                            </el-form-item>
+                            <el-form-item>
+                            <el-button type="primary" @click="submitForm('singnUpForm')" >注册</el-button>
+                            <el-button @click.native.prevent="resetForm('singnUpForm')">重置</el-button>
+                            </el-form-item>
+                        </el-form>
+                        
+                    </el-card>
+                    </div>
+                </el-main>
+              </el-container>
+        </template>
+        <video id="videoBG" autoplay muted loop>
+			<source src="static/video/videoplayback.mp4" type="video/mp4">
+		</video>
+        </div>
+
+    </div>
+	<script src="static/js/d_index.js"></script>
+</body>
+</html>

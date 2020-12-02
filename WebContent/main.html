@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<title>系统主界面</title>
+<link href="https://lib.baomitu.com/element-ui/2.10.1/theme-chalk/index.css" rel="stylesheet"/>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
+<script src="https://lib.baomitu.com/element-ui/2.10.1/index.js"></script>
+<script src="http://www.magicalcoder.com/assets/js/common.js"></script>
+<!-- <script src="https://l2dwidget.js.org/lib/L2Dwidget.min.js"></script> -->
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+
+<style>
+body{
+	background-image: url('https://tva2.sinaimg.cn/large/87c01ec7gy1fsnqqzqzonj21kw0w0ww2.jpg');
+	background-size: cover;
+}
+</style>
+</head>
+<body >
+<div id="magicalDragScene" class="mc-root mc-ui-absolute-pane">
+	<template>
+	<el-container>
+		<el-header style="width: 100%;" height="40px"></el-header>
+		<el-container>
+			<el-aside style="height: 100%;" width="200px">
+				<el-menu mode="vertical">
+					<el-menu-item index="1" @click.native.prevent="showMain">首页</el-menu-item>
+					<el-submenu index="2">
+						<span class="magical-drag-tmp-submenu-name" slot="title">普通用户功能</span>
+						<el-menu-item index="1-1" @click.native.prevent="showCard">租车</el-menu-item>
+					</el-submenu>
+					<el-submenu index="3">
+						<span class="magical-drag-tmp-submenu-name" slot="title">子菜单2</span>
+						<el-menu-item index="2-1" @click.native.prevent="showShelt">菜单条目2-1</el-menu-item>
+					</el-submenu>
+					<el-menu-item index="4"><a href="index.html">登出</a></el-menu-item>
+				</el-menu>
+			</el-aside>
+			<el-container height="100%" v-show="vueData.showTable">
+				<el-main style="width: 100%; height: 100%;">
+					<el-card>
+						<el-table :data="tableList.slice((currentPage-1)*pageSize,currentPage*pageSize)" :fit="true" :show-header="true" stripe="true">
+							<el-table-column v-for="(value,name) in tableList[0]" :prop="name" :label="name"></el-table-column>
+							<el-table-column label="操作" fixed="right" width="200px">
+								<template slot-scope="scope">
+								<el-button mc-type="column-el-button" size="mini" type="primary"><i class="el-icon-edit">编辑</i></el-button>
+								<el-button mc-type="column-el-button" size="mini" type="danger" @click.native.prevent="handleDelete(scope.$index, scope.row)"><i class="el-icon-delete">删除</i></el-button>
+								</template>
+							</el-table-column>
+						</el-table>
+						<el-pagination style="margin-left: -5px;" @current-change="handleCurrentChange" layout="prev,pager,next" :total="tableList.length" :current-page.sync="currentPage" :page-size="pageSize" :pager-count="5"></el-pagination>
+					</el-card>
+				</el-main>
+				<el-footer></el-footer>
+			</el-container>
+		</el-container>
+	</el-container>
+	<el-row style="position: absolute; left: 65.0699%; top: 19.2857%;">
+		<el-col :xs="24"></el-col>
+		<el-col :xs="24"></el-col>
+	</el-row>
+	</template>
+</div>
+<script>
+//ajax库采用axios
+//调试:打开浏览器控制台(F12),在代码中某行增加 debugger 即可调试
+
+var vueData = {tableList : [],/*别删我*/
+currentPage : 1,/*别删我*/
+radioGroup : "",/*别删我*/
+pageSize: 9,
+checkboxGroup : [],/*别删我*/
+input : "",/*别删我*/
+select : "",/*别删我*/
+badge : 10,/*别删我*/
+showTable: false,
+colorPicker : "",/*别删我*/
+slider : 0,/*别删我*/
+fileList : []};
+var vueMethod = {
+focus : function (e) {try {_t.fastKey.focusElem(e);}catch(e) {}},/*别删我*/
+_tabClick : function(){setTimeout(function(){new McECharts().render();},200)
+},
+handleDelete: function(index, row){this.tableData.splice(index+1, 1);this.rendering}
+}
+
+var vueMounted = function(){
+}
+/*注意以上代码由系统维护,非专业人士请勿修改*/
+var rowData = [];
+var myMethod = {
+	
+}
+for (var key in myMethod) {
+    vueMethod[key] = myMethod[key];
+}
+var myMounted = function () {
+	for(let i=0;i<20;i++){
+		rowData.push({id: i,name: 'xiaom'})
+	}
+
+}
+if(myMounted!==null){vueMounted=myMounted;}
+var myData = {
+	tableList : rowData,
+	}
+/*把您定义的数据覆盖布局器自动识别的变量,考虑到兼容性，请下载查看head中重写的assign方法*/
+Object.assign(vueData, myData);
+var _t = this;
+var Ctor = Vue.extend({
+    //提前绑定的变量
+    data: function() {
+        return vueData;
+    },
+    //页面加载完 会执行方法 可以做一些初始化操作
+    mounted: vueMounted,
+    /*当前页面绑定的方法集合 与布局器节点一一映射即可 参照element ui文档*/
+    methods: {
+				focus : function (e) {try {_t.fastKey.focusElem(e);}catch(e) {}},/*别删我*/
+				_tabClick : function(){setTimeout(function(){new McECharts().render();},200)
+				},
+				handleDelete: function(index, row){
+					this.tableList.splice(index,1);
+					this.rendering
+				},
+				showMain: function(){
+					vueData.showTable=false;
+				},
+				showShelt: function() {
+					vueData.showTable=true;
+				},
+				handleCurrentChange : function(val) {
+        			this.currentPage=val;
+      			}
+				}
+});
+new Ctor().$mount('#magicalDragScene');
+
+var card=new Vue({
+	el:'#priceCard',
+	data:{},
+	methods:{
+
+	}
+})
+</script>
+
+<script>
+    L2Dwidget.init({
+        "model": {
+            //jsonPath: "https://unpkg.com/live2d-widget-model-haruto/assets/haruto.model.json",//<!--这里改模型，前面后面都要改-->
+            // jsonPath: "https://unpkg.com/live2d-widget-model-epsilon2_1/assets/Epsilon2.1.model.json",//<!--这里改模型，前面后面都要改-->
+            //jsonPath: "https://unpkg.com/live2d-widget-model-nico/assets/nico.model.json",//<!--这里改模型，前面后面都要改-->
+            // jsonPath: "https://unpkg.com/live2d-widget-model-gf/assets/Gantzert_Felixander.model.json",//<!--这里改模型，前面后面都要改-->
+            // jsonPath: "https://unpkg.com/live2d-widget-model-haru/02/assets/haru02.model.json",//<!--这里改模型，前面后面都要改-->
+            // jsonPath: "https://unpkg.com/live2d-widget-model-hibiki/assets/hibiki.model.json",//<!--这里改模型，前面后面都要改-->
+            // jsonPath: "https://unpkg.com/live2d-widget-model-haru/02/assets/haru02.model.json",//<!--这里改模型，前面后面都要改-->
+            // jsonPath: "https://unpkg.com/live2d-widget-model-haru/02/assets/haru02.model.json",//<!--这里改模型，前面后面都要改-->
+            // jsonPath: "https://unpkg.com/live2d-widget-model-haru/02/assets/haru02.model.json",//<!--这里改模型，前面后面都要改-->
+            "scale": 1
+        },
+        "display": {
+            "position": "left",//<!--设置看板娘的上下左右位置-->
+            "width": 150,
+            "height": 300,
+            "hOffset": 20,
+            "vOffset": -30
+        },
+        "mobile": {
+            "show": true,
+            "scale": 0.5
+        },
+        "react": {
+            "opacityDefault": 0.7,//<!--设置透明度-->
+            "opacityOnHover": 0.2
+        },
+		dialog: {
+        // 开启对话框
+        enable: true,
+        script: {
+          // 每空闲 10 秒钟，显示一条一言
+          'every idle 15s': '$hitokoto$',
+          // 当触摸到星星图案
+          'hover .star': '星星在天上而你在我心里 (*/ω＼*)',
+          // 当触摸到角色身体
+          'tap body': '哎呀！别碰我！',
+          // 当触摸到角色头部
+          'tap face': '人家已经不是小孩子了！'
+        }
+      }
+    });
+</script>
+</body>
+
+</html>
