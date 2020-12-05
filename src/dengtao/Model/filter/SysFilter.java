@@ -11,7 +11,7 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebFilter(filterName="UserloginFilter",urlPatterns="/jsp/*")
+@WebFilter(filterName="UserloginFilter",urlPatterns="/jsj/*")
 public class SysFilter implements Filter{
 	/**
 	 * 登陆过滤器，未登录不能访问jsp目录下的jsp页面

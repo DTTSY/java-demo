@@ -14,7 +14,7 @@
 <script src="${pageContext.request.contextPath}/static/js/elementUI.js"></script>
 <!-- <script src="https://l2dwidget.js.org/lib/L2Dwidget.min.js"></script> -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-
+<script src="http://cdn.staticfile.org/moment.js/2.24.0/moment.js"></script>
 
 </head>
 <body>
@@ -29,13 +29,14 @@
 					<el-submenu index="2" >
 						<span  slot="title">普通用户功能</span>
 						<el-menu-item index="1-1" @click.native.prevent="iniForm">租车</el-menu-item>
+						<el-menu-item index="1-2"  disabled @click.native.prevent="showOrder">我的订单</el-menu-item><!-- @click.native.prevent="showOrder" -->
 					</el-submenu>
 					<el-menu-item index="4" @click.native.prevent="logout">登出</a></el-menu-item>
 				</el-menu>
 			</el-aside>
-
-				<!-- <el-main >
-					<el-carousel :interval="4000"  arrow="always" type="card">
+		
+				<el-main >
+					<!-- <el-carousel :interval="4000"  arrow="always" type="card">
 						<el-carousel-item v-for="(img,index) in carImage" :key="index">
 							<el-image 
 								style="width: 100%"
@@ -65,7 +66,7 @@
 								</el-select>
 								</el-form-item>
 								</el-col>
-
+								
 								<el-col :span="11">
 									<el-form-item label="送车地点" prop="region">
 									<el-select v-model="ruleForm.region" placeholder="请选择">
@@ -74,16 +75,6 @@
 									</el-select>
 									</el-form-item>
 								</el-col>
-							</el-form-item>
-
-							<el-form-item label="租   期" prop="value1">
-								<el-date-picker
-								v-model="ruleForm.value1"
-								type="datetimerange"
-								range-separator="至"
-								start-placeholder="开始日期"
-								end-placeholder="结束日期">
-								</el-date-picker>
 							</el-form-item>
 
 							<el-form-item label="选择车型" clearable prop="car">
@@ -97,6 +88,16 @@
 								  </el-select>
 							</el-form-item>
 
+							<el-form-item label="租   期" prop="value1">
+								<el-date-picker
+								v-model="ruleForm.value1"
+								type="datetimerange"
+								range-separator="至"
+								start-placeholder="开始日期"
+								end-placeholder="结束日期">
+								</el-date-picker>
+							</el-form-item>
+
 							<el-form-item>
 							  <el-button type="primary" @click="checkForm('ruleForm')">提交订单</el-button>
 							  <el-button @click="resetForm('ruleForm')">重置</el-button>
@@ -104,7 +105,7 @@
 							</el-form-item>
 
 							<el-dialog title="支付" :visible.sync="ruleForm.dialogFormVisible">
-									<el-image src="${pageContext.request.contextPath}/static/image/QRcode_alipay.jpg"></el-image>
+									<el-image src="https://s3.ax1x.com/2020/12/04/DHbuCV.jpg"></el-image>
 									<div slot="footer" class="dialog-footer">
 									<el-button @click="ruleForm.dialogFormVisible = false">取 消</el-button>
 									<el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
@@ -113,6 +114,37 @@
 
 						  </el-form>
 					  </el-card>
+
+					  <el-card v-show="showOrders">
+						<div slot="header" class="clearfix">
+							<span>订单</span>
+						  </div>
+
+						<!-- <el-table :data="tableList" :fit="true" :show-header="true" stripe="true">
+							<el-table-column v-for="(value,name) in tableListCol" :prop="name" :label="value"></el-table-column>
+
+							<el-table-column label="操作" fixed="right" width="200px">
+								<template slot-scope="scope">
+									<el-button mc-type="column-el-button" size="mini" type="primary"  icon="el-icon-edit" round>编辑</el-button>
+									<el-button mc-type="column-el-button" size="mini" type="primary"  icon="el-icon-edit" round>编辑</el-button>
+								</template>
+							</el-table-column>
+
+						</el-table> -->
+
+						<el-table :data="this.tableList.slice((currentPage-1)*pageSize,currentPage*pageSize)" :fit="true" :show-header="true" stripe="true">
+							<el-table-column v-for="(value,name) in this.tableListCol" :prop="name" :label="value"></el-table-column>
+							<el-table-column label="操作" fixed="right" width="200px">
+								<template slot-scope="scope">
+								<el-button mc-type="column-el-button" size="mini" type="primary" @click="1+0" icon="el-icon-edit" round>编辑</el-button>
+								<el-button mc-type="column-el-button" size="mini" type="danger"  @click="1+0" icon="el-icon-delete" round>删除</el-button>
+								</template>
+							</el-table-column>
+						</el-table>
+						
+						<el-pagination style="margin-left: -5px;" @current-change="handleCurrentChange" layout="prev,pager,next" :total="tableList.length" :current-page.sync="currentPage" :page-size="pageSize" :pager-count="5"></el-pagination>
+						<h3 v-for="(value,name) in this.tableListCol">value :{{value}}name :{{name}} </h3>
+					</el-card>
 
 				</el-main>
 		</el-container>

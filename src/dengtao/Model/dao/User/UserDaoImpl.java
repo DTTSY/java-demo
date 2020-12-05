@@ -2,22 +2,24 @@ package dengtao.Model.dao.User;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.mysql.jdbc.PreparedStatement;
-
 import dengtao.Model.dao.util.BaseDao;
+import dengtao.Model.pojo.Car;
 import dengtao.Model.pojo.User;
 
 public class UserDaoImpl implements UserDao{
 
 	@Override
-	public User getUser(Connection conn, String userId) {
+	public User getUserByName(Connection conn, String userName) {
 		PreparedStatement pstm = null;
 		ResultSet rs=null;
 		User user=null;
 
 		String sql="SELECT * FROM `User` WHERE `name`=?";
-		Object[] params = {userId};
+		Object[] params = {userName};
 		
 		if (conn!=null) {
 			try {
@@ -26,7 +28,6 @@ public class UserDaoImpl implements UserDao{
 					user=new User();
 					user.setName(rs.getString("name"));
 					user.setPsw(rs.getString("psw"));
-					user.setOrderId(rs.getInt("orderId"));
 					user.setAuthority(rs.getInt("Authority")==0);
 				}
 			} catch (Exception e) {
@@ -39,9 +40,9 @@ public class UserDaoImpl implements UserDao{
 	}
 
 	@Override
-	public boolean addUser(Connection conn, String name, String psw) {
+	public int addUser(Connection conn, String name, String psw) {
 		PreparedStatement pstm = null;
-		int rs;
+		int rs = 0;
 		
 		String sql="INSERT INTO `User`(`name`,`psw`) VALUES(?,?)";
 		Object[] params = {name, psw};
@@ -49,16 +50,43 @@ public class UserDaoImpl implements UserDao{
 		if (conn!=null) {
 			try {
 				rs = BaseDao.executeUpdate(conn, sql, params, pstm);
-				if(rs!=0)
-					return true;
 			} catch (Exception e) {
 				e.printStackTrace();
 			}finally {
 				BaseDao.close(null, pstm, null);
 			}
 		}
-		return false;
+		return rs;
 	}
-	
 
+	@Override
+	public List<User> getUsers(Connection conn) {
+		// TODO Auto-generated method stub
+		PreparedStatement pstm = null;
+		ResultSet rs=null;
+		List<User> users = new ArrayList<>();
+		User user=null;
+		
+		String sql="SELECT * FROM `User`";
+		Object[] params = {};
+		
+		if (conn!=null) {
+			try {
+				rs = BaseDao.executeQuery(conn, sql, params, pstm, rs);
+				while(rs.next()) {
+					user=new User();
+					user.setName(rs.getString("name"));
+					user.setPsw(rs.getString("psw"));
+					user.setOrderId(rs.getInt("orderId"));
+					user.setAuthority(rs.getInt("Authority")==0);
+					users.add(user);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}finally {
+				BaseDao.close(null, pstm, rs);
+			}
+		}
+		return users;
+	}
 }

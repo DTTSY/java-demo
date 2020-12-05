@@ -7,6 +7,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import dengtao.Model.pojo.User;
+import dengtao.Model.service.Order.OrderService;
+import dengtao.Model.service.Order.OrderServiceImpl;
+
 /**
  * Servlet implementation class LeaseCar
  */
@@ -28,6 +32,9 @@ public class LeaseCar extends HttpServlet {
 		System.out.println(request.getParameter("car"));
 		System.out.println(request.getParameter("date"));
 		System.out.println(request.getParameter("total"));
+		
+		OrderService orderService=new OrderServiceImpl();
+		orderService.leaseCar(request.getParameter("date"), request.getParameter("car"), request.getParameter("total"), request.getParameter("city")+"/"+request.getParameter("region"), (User)request.getSession().getAttribute("USER_SESSION"));
 		
 		response.getWriter().write("{\"ok\": 1}");
 	}

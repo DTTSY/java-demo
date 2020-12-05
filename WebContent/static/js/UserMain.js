@@ -2,33 +2,44 @@
 
 var vueData = function () {
     return {
+      tableListCol: {},
+      tableList : [],
+      currentPage : 1,
+      radioGroup : "",
+      pageSize: 9,
+      checkboxGroup : [],
+      input : "",
+      select : "",
+      badge : 10,
+      slider : 0,
+      fileList : [],
+      
+      showOrders: false,
       showForm: false,
-        ruleForm: {
-          name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          city: '',
-          value1: [new Date(2020, 12, 11, 10, 10), new Date(2020, 12, 12, 10, 10)],
-          rentDays: function (day) {
-            return Math.floor((day[1]-day[0])/(24*3600*1000));
-          },
-          total:function (list) {
-            let _t = this;
-            var price = 0;
-            if(list!=null){
+      ruleForm: {
+        name: '',
+        region: '',
+        date1: '',
+        date2: '',
+        delivery: false,
+        type: [],
+        resource: '',
+        city: '',
+        value1: [new Date(2020, 12, 11, 10, 10), new Date(2020, 12, 12, 10, 10)],
+        rentDays: function (day) {
+          return Math.floor((day[1]-day[0])/(24*3600*1000));
+        },
+        total:function (list) {
+          let _t = this;
+          var price = 0;
+          if(list!=null){
             for (let index = 0; index < list.length; index++) {
               if (list[index].value == _t.car) {
                 price = list[index].price;
               }
             }
             return price * _t.rentDays(_t.value1);
-            }else{
-            return price;
-            }
+          }else{return price;}
           },
           dialogFormVisible: false,
           car: '',
@@ -98,9 +109,10 @@ var Ctor = Vue.extend({
             this.$refs[formName].validate((valid) => {
               if (valid) {
                 _t.ruleForm.dialogFormVisible=false;
+                let d = moment(_t.ruleForm.value1[0]).format('YYYY-MM-DD');
                 $.ajax({
                   url: "LeaseCar.do",
-                  data: {city: _t.ruleForm.city, region: _t.ruleForm.region, rentDays: _t.ruleForm.rentDays(_t.ruleForm.value1), car: _t.ruleForm.car, date: _t.ruleForm.value1[0], total: _t.ruleForm.total(_t.optionss)},
+                  data: {city: _t.ruleForm.city, region: _t.ruleForm.region, rentDays: _t.ruleForm.rentDays(_t.ruleForm.value1), car: _t.ruleForm.car, date: d, total: _t.ruleForm.total(_t.optionss)},
                   type: "GET",
                   dataType: "json",
                   success: function(data){
@@ -123,7 +135,7 @@ var Ctor = Vue.extend({
                 console.log(_t.ruleForm.region);
                 console.log(_t.ruleForm.rentDays(_t.ruleForm.value1));
                 console.log(_t.ruleForm.car);
-                console.log(_t.ruleForm.value1[0]);
+                console.log(d);
                 console.log(_t.ruleForm.total(_t.optionss));
               } else {
                 return false;
@@ -146,7 +158,6 @@ var Ctor = Vue.extend({
         logout: function () {
           self.location.href="Logout.do";
         },
-
         iniForm: function () {
           this.showForm=true;
           let _t=this;
@@ -169,6 +180,34 @@ var Ctor = Vue.extend({
               }
             });
             console.log(_t.ruleForm.optionss);
+        },
+        showOrder(){
+          this.showOrders=true;
+          let _t = this;
+          $.ajax({
+            url: "GetData.do",
+            data: {dataName: "myOrders"},
+            type: "GET",
+            dataType: "json",
+            success: function(data){
+              if(data!=null){
+                _t.tatableList = data.list;
+                _t.tableListCol = data.col;
+                console.log(_t.tatableList);
+                console.log(_t.tableListCol);
+                
+              }else{
+                Swal.fire({
+                icon: 'error',
+                title: 'X﹏X',
+                text: '获取数据失败',
+                });
+              }
+              }
+            });
+        },
+        handleCurrentChange : function(val) {
+          this.currentPage=val;
         }
         
     }

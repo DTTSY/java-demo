@@ -1,8 +1,28 @@
 //调试:打开浏览器控制台(F12),在代码中某行增加 debugger 即可调试
+var carId;
 
 var vueData = function () {
 
     return {
+        car: [{
+            title:'车辆编号',
+            value:''}
+            ,{
+            title:'车辆名称',
+            value:''},
+            {
+            title:'车辆颜色',
+            value:''
+            },{
+            title:'车辆类型',
+            value:''
+            },{
+            title:'车辆计价',
+            value:''
+            }
+        ],
+        dialogFormVisible: false,
+        tableListCol: {},
         tableList : [],
         currentPage : 1,
         radioGroup : "",
@@ -13,19 +33,13 @@ var vueData = function () {
         badge : 10,
         showTable: false,
         showUserGUI:false,
-        carImage: ['https://car3.autoimg.cn/cardfs/product/g29/M07/25/DE/1024x0_1_q95_autohomecar__ChsEn17CWpOAHPHsAAd4PkJVfAo037.jpg','https://car3.autoimg.cn/cardfs/product/g24/M09/45/4D/1024x0_1_q95_autohomecar__ChsEl19fVayASj0SABoihBCpr0E682.jpg','https://car2.autoimg.cn/cardfs/product/g25/M01/48/40/1024x0_1_q95_autohomecar__ChwFj19wQVmAQ7u1AAWzuX3J-3I739.jpg'],
         colorPicker : "",
         slider : 0,
         fileList : []
 }
 }
 
-var vueMethod = {
-focus : function (e) {try {_t.fastKey.focusElem(e);}catch(e) {}},/*别删我*/
-_tabClick : function(){setTimeout(function(){new McECharts().render();},200)
-},
-handleDelete: function(index, row){this.tableData.splice(index+1, 1);this.rendering}
-}
+var vueMethod = { }
 
 var vueMounted = function(){
 }
@@ -58,13 +72,47 @@ var Ctor = Vue.extend({
 				_tabClick : function(){setTimeout(function(){new McECharts().render();},200)
 				},
 				handleDelete: function(index, row){
-					this.tableList.splice(index,1);
-					this.rendering
-				},
+                    console.log(this.tableList[index].id);
+                    this.tableList.splice(index,1);
+					this.rendering;
+                },
+                handleModify: function(index, row){
+                    this.dialogFormVisible=true;
+                    carId = this.tableList[index].id;
+                },
 				showMain: function(){
 					this.showTable=false;
-				},
-				showShelt: function() {
+                },
+                sbmittModify: function(){
+                    console.log(carId);
+                    this.car.forEach(element => {
+                        console.log(element.value);
+                        element.value='';
+                    });
+                    // dialogFormVisible = false;
+                }, 
+				showShelt: function(Dataname) {
+                    let _t = this;
+                    $.ajax({
+                        url: "GetData.do",
+                        data: {dataName: Dataname},
+                        type: "GET",
+                        dataType: "json",
+                        success: function(data) {
+                        	if(data!=null){
+                                _t.tableList = data.list;
+                                _t.tableListCol = data.col;
+                                //console.log(data.url);
+                            }
+                            else{
+                        		Swal.fire({
+										  icon: 'error',
+										  title: 'X﹏X',
+										  text: '获取数据失败！！'
+										});
+                        	}
+                        }
+                    });
 					this.showTable=true;
                 },
                 logout: function () {
@@ -77,8 +125,7 @@ var Ctor = Vue.extend({
 });
 new Ctor().$mount('#app');
 
-
-
+/*
 L2Dwidget.init({
     "model": {
         //jsonPath: "https://unpkg.com/live2d-widget-model-haruto/assets/haruto.model.json",//<!--这里改模型，前面后面都要改-->
@@ -114,11 +161,11 @@ L2Dwidget.init({
       // 每空闲 10 秒钟，显示一条一言
       'every idle 15s': '$hitokoto$',
       // 当触摸到星星图案
-      'hover .star': '星星在天上而你在我心里 (*/ω＼*)',
+      'hover .star': '星星在天上而你在我心里 (*/   /*ω＼*)',
       // 当触摸到角色身体
       'tap body': '哎呀！别碰我！',
       // 当触摸到角色头部
       'tap face': '人家已经不是小孩子了！'
     }
   }
-});
+});*/

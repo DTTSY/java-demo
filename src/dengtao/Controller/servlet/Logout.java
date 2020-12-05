@@ -18,7 +18,7 @@ public class Logout extends HttpServlet {
 		response.setContentType("text/html;charset=utf-8");
 		
 		request.getSession().removeAttribute("USER_SESSION");
-		response.sendRedirect("index.html");
+		response.sendRedirect(request.getContextPath() +"/index.html");
 	}
 
 }

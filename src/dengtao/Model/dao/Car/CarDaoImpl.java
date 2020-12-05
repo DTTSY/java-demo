@@ -26,7 +26,8 @@ public class CarDaoImpl implements CarDao{
 		if (conn!=null) {
 			try {
 				rs = BaseDao.executeQuery(conn, sql, params, pstm, rs);
-				if (rs.next()) {
+				
+				while(rs.next()) {
 					car=new Car();
 					car.setId(rs.getInt("id"));
 					car.setName(rs.getString("name"));
@@ -43,6 +44,39 @@ public class CarDaoImpl implements CarDao{
 			}
 		}
 		
+		return cars;
+	}
+
+	@Override
+	public List<Car> getCars(Connection conn) {
+		PreparedStatement pstm = null;
+		ResultSet rs=null;
+		List<Car> cars=new ArrayList<>();
+		Car car=null;
+		
+		String sql="SELECT * FROM `Car`";
+		Object[] params = {};
+		
+		if (conn!=null) {
+			try {
+				rs = BaseDao.executeQuery(conn, sql, params, pstm, rs);
+				
+				while(rs.next()) {
+					car=new Car();
+					car.setId(rs.getInt("id"));
+					car.setName(rs.getString("name"));
+					car.setColor(rs.getString("color"));
+					car.setPrice(rs.getFloat("price"));
+					car.setType(rs.getString("type"));
+					car.setStatus(rs.getInt("status"));
+					cars.add(car);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}finally {
+				BaseDao.close(null, pstm, rs);
+			}
+		}
 		return cars;
 	}
 

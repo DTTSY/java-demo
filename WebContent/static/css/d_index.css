@@ -13,6 +13,11 @@
     height: 300px;
 }
 
+body{
+	background-image: url('https://s3.ax1x.com/2020/12/04/DHbrbd.jpg');
+	background-size: cover;
+}
+/*
 #videoBG {
 	position: absolute;
 	top: 0;
@@ -40,7 +45,7 @@
         display: none;
     }
     body {
-        /*background: url('poster.jpg');*/
+        /*background: url('poster.jpg');*//*
         background-size: cover;
     }
-}
+}*/

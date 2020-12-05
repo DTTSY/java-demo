@@ -30,7 +30,10 @@ public class Login extends HttpServlet {
 		if(user!=null) {
 			//保存登陆用户的信息
 			request.getSession().setAttribute("USER_SESSION",user);
-			data.put("url", "jsp/UserMain.jsp");
+			if(user.getAuthority())
+				data.put("url", "jsp/UserMain.jsp");
+			else 
+				data.put("url", "jsp/Admin.jsp");
 		}else {
 			data.put("url", "null");
 		}

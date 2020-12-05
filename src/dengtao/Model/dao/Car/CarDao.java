@@ -7,4 +7,6 @@ import dengtao.Model.pojo.Car;
 
 public interface CarDao {
 	public List<Car> getCars(Connection conn, int status);
+	
+	public List<Car> getCars(Connection conn);
 }

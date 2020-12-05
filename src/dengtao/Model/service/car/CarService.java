@@ -7,4 +7,5 @@ import dengtao.Model.pojo.Car;
 public interface CarService {
 	public List<Car> getAvailableCars();
 	public String getAvailableCarsToJSON();
+	public String getCarsToJSON();
 }
