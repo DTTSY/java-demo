@@ -1,0 +1,16 @@
+{
+    "files.associations": {
+        ".json": "json",
+        ".wxss": "css",
+        ".wxs": "javascript",
+        ".jsp": "html",
+        "*.tcc": "c",
+        "deque": "c",
+        "list": "c",
+        "string": "c",
+        "unordered_map": "c",
+        "unordered_set": "c",
+        "vector": "c",
+        "ostream": "c"
+    }
+}

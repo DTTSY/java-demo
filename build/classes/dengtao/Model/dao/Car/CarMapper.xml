@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <!-- namespace 绑定对应的dao/mapper接口 -->
+ 
+<mapper namespace="dengtao.Model.dao.Car.CarMapper">
+  <select id="getCars" resultType="dengtao.Model.pojo.Car">
+    select * from `Car`;
+  </select>
+  
+  <insert id="addCar" parameterType="map">
+  insert into `Car`(`name`, `color`, `type`, `price`) values(#{name}, #{color},#{type},#{price});
+  </insert>
+  
+  <delete id="deleteCar" parameterType="int">
+  delete from `Car` where `id`=#{id};
+  </delete>
+  
+  <update id="modifyCar" parameterType="map">
+  update `Car` set `name`=#{name}, `color`=#{color}, `type`=#{type}, `price`=#{price}, `status`=#{status} where `id`=#{oldId};
+  </update>
+</mapper>

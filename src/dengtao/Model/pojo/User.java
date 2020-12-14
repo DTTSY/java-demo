@@ -9,6 +9,17 @@ public class User implements Serializable{
 	private Integer orderId;
 	private Boolean authority;
 	
+	public User() {
+		super();
+	}
+	
+	public User(String name, String psw, Integer orderId, Boolean authority) {
+		super();
+		this.name = name;
+		this.psw = psw;
+		this.orderId = orderId;
+		this.authority = authority;
+	}
 	public String getName() {
 		return name;
 	}
@@ -32,6 +43,11 @@ public class User implements Serializable{
 	}
 	public void setAuthority(Boolean authority) {
 		this.authority = authority;
+	}
+
+	@Override
+	public String toString() {
+		return "User [name=" + name + ", psw=" + psw + ", orderId=" + orderId + ", authority=" + authority + "]";
 	}
 	
 }

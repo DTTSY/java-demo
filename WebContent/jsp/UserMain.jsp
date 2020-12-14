@@ -9,9 +9,9 @@
 <title>系统主界面</title>
 <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/UserMain.css">
-<script src="${pageContext.request.contextPath}/static/js/jquery.min.js"></script>
-<script src="${pageContext.request.contextPath}/static/js/vue.min.js"></script>
-<script src="${pageContext.request.contextPath}/static/js/elementUI.js"></script>
+<script src="${pageContext.request.contextPath}/static/js/lib/jquery.min.js"></script>
+<script src="${pageContext.request.contextPath}/static/js/lib/vue.min.js"></script>
+<script src="${pageContext.request.contextPath}/static/js/lib/elementUI.js"></script>
 <!-- <script src="https://l2dwidget.js.org/lib/L2Dwidget.min.js"></script> -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script src="http://cdn.staticfile.org/moment.js/2.24.0/moment.js"></script>
@@ -104,8 +104,8 @@
 							  <el-col :span="10"><h3 class="days">租期:{{ruleForm.rentDays(ruleForm.value1)}}天<br>租金:{{ruleForm.total(optionss)}}元</h3></el-col>
 							</el-form-item>
 
-							<el-dialog title="支付" :visible.sync="ruleForm.dialogFormVisible">
-									<el-image src="https://s3.ax1x.com/2020/12/04/DHbuCV.jpg"></el-image>
+							<el-dialog title="扫码支付" :visible.sync="ruleForm.dialogFormVisible">
+									<el-image src="https://s3.ax1x.com/2020/12/11/rEtYlT.png"></el-image>
 									<div slot="footer" class="dialog-footer">
 									<el-button @click="ruleForm.dialogFormVisible = false">取 消</el-button>
 									<el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>

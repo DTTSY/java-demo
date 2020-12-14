@@ -1,13 +1,22 @@
 var DATA = function(){
     var validatePass = (rule, value, callback) => {
         if (value === '') {
-          callback(new Error('请再次输入密码'));
+          callback(new Error('请再次输入密码！'));
         } else if ( value !== this.singnUpForm.psw ) {
-          callback(new Error('两次输入密码不一致!'));
+          callback(new Error('两次输入密码不一致！'));
         } else {
           callback();
         }
       };
+
+      var validateName = (rule, value, callback) => {
+        if (!/^[a-zA-Z][a-zA-Z0-9_]{3,15}$/.test(value)) {
+            callback(new Error('允许字母开头，允许4-15字节，允许字母数字下划线组合'));
+        }else {
+          callback();
+        }
+      };
+      
 return {
     loginForm: {
     name: '',
@@ -25,7 +34,8 @@ return {
         { required: true, message: ' 不能为空！', trigger: 'blur' }
     ],
     name: [
-        { required: true, message: ' 不能为空！', trigger: 'blur'  }
+        { required: true, message: ' 不能为空！', trigger: 'blur' },
+        { validator: validateName, trigger: 'blur'  }
     ],
     checkPass: [
         { validator: validatePass, trigger: 'blur' }
@@ -84,7 +94,7 @@ var app = Vue.extend({
                                     Swal.fire({
                                               icon: 'error',
                                               title: 'X﹏X',
-                                              text: '注册失败',
+                                              text: '注册失败,用户已存在！',
                                             });
                                 }
                             }

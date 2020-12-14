@@ -1,6 +1,6 @@
 //调试:打开浏览器控制台(F12),在代码中某行增加 debugger 即可调试
 
-var vueData = function () {
+let vueData = function () {
     return {
       tableListCol: {},
       tableList : [],
@@ -31,7 +31,7 @@ var vueData = function () {
         },
         total:function (list) {
           let _t = this;
-          var price = 0;
+          let price = 0;
           if(list!=null){
             for (let index = 0; index < list.length; index++) {
               if (list[index].value == _t.car) {
@@ -109,10 +109,12 @@ var Ctor = Vue.extend({
             this.$refs[formName].validate((valid) => {
               if (valid) {
                 _t.ruleForm.dialogFormVisible=false;
-                let d = moment(_t.ruleForm.value1[0]).format('YYYY-MM-DD');
+                let d1 = moment(_t.ruleForm.value1[0]).format('YYYY-MM-DD');
+                let d2 = moment(_t.ruleForm.value1[1]).format('YYYY-MM-DD');
+                let days= _t.ruleForm.rentDays(_t.ruleForm.value1);
                 $.ajax({
                   url: "LeaseCar.do",
-                  data: {city: _t.ruleForm.city, region: _t.ruleForm.region, rentDays: _t.ruleForm.rentDays(_t.ruleForm.value1), car: _t.ruleForm.car, date: d, total: _t.ruleForm.total(_t.optionss)},
+                  data: {price: _t.ruleForm.total(_t.optionss)/days, city: _t.ruleForm.city + "/" +_t.ruleForm.region, rentDays: days, carId: _t.ruleForm.car, beginDate: d1, total: _t.ruleForm.total(_t.optionss), endDate: d2},
                   type: "GET",
                   dataType: "json",
                   success: function(data){
@@ -120,13 +122,13 @@ var Ctor = Vue.extend({
                       Swal.fire({
                         icon: 'success',
                         title: '(๑•̀ㅂ•́)و✧',
-                        text: '支付成功',
+                        text: '支付成功!',
                         });
                     }else{
                       Swal.fire({
                       icon: 'error',
                       title: 'X﹏X',
-                      text: '获取数据失败',
+                      text: '支付失败!',
                       });
                     }
                     }
@@ -135,7 +137,6 @@ var Ctor = Vue.extend({
                 console.log(_t.ruleForm.region);
                 console.log(_t.ruleForm.rentDays(_t.ruleForm.value1));
                 console.log(_t.ruleForm.car);
-                console.log(d);
                 console.log(_t.ruleForm.total(_t.optionss));
               } else {
                 return false;
@@ -155,7 +156,7 @@ var Ctor = Vue.extend({
         resetForm(formName) {
             this.$refs[formName].resetFields();
         },
-        logout: function () {
+        logout() {
           self.location.href="Logout.do";
         },
         iniForm: function () {
@@ -184,6 +185,7 @@ var Ctor = Vue.extend({
         showOrder(){
           this.showOrders=true;
           let _t = this;
+
           $.ajax({
             url: "GetData.do",
             data: {dataName: "myOrders"},
@@ -195,7 +197,6 @@ var Ctor = Vue.extend({
                 _t.tableListCol = data.col;
                 console.log(_t.tatableList);
                 console.log(_t.tableListCol);
-                
               }else{
                 Swal.fire({
                 icon: 'error',
@@ -206,7 +207,7 @@ var Ctor = Vue.extend({
               }
             });
         },
-        handleCurrentChange : function(val) {
+        handleCurrentChange(val) {
           this.currentPage=val;
         }
         

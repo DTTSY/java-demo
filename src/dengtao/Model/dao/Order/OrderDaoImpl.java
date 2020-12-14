@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.mysql.jdbc.PreparedStatement;
 import com.sun.org.apache.regexp.internal.recompile;
@@ -58,7 +59,6 @@ public class OrderDaoImpl implements OrderDao{
 					order.setPrice(rs.getFloat("price"));
 					order.setCity(rs.getString("city"));
 					order.setCarId(rs.getInt("carId"));
-					order.setStatus(rs.getInt("status")!=0);
 					orders.add(order);
 				}
 			} catch (Exception e) {
@@ -99,7 +99,6 @@ public class OrderDaoImpl implements OrderDao{
 					order.setPrice(rs.getFloat("price"));
 					order.setCity(rs.getString("city"));
 					order.setCarId(rs.getInt("carId"));
-					order.setStatus(rs.getInt("status")!=0);
 					orders.add(order);
 				}
 			} catch (Exception e) {
@@ -109,5 +108,17 @@ public class OrderDaoImpl implements OrderDao{
 			}
 		}
 		return orders;
+	}
+
+	@Override
+	public List<Order> getOrders() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int addOrder(Map<String, Object> info) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

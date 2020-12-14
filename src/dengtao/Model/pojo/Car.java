@@ -1,17 +1,43 @@
 package dengtao.Model.pojo;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 public class Car {
+	@JSONField(name="车辆编号", ordinal = 1)
 	private Integer id;
-	private String name;
-	private String color;
-	private String type;
-	private Float price;
-	private Integer status;
 	
-	public Integer getStatus() {
+	@JSONField(name="车辆名称", ordinal = 2)
+	private String name;
+	
+	@JSONField(name="车辆颜色", ordinal = 3)
+	private String color;
+	
+	@JSONField(name="车辆类型", ordinal = 4)
+	private String type;
+	
+	@JSONField(name="车辆计价", ordinal = 5)
+	private Float price;
+	
+	@JSONField(name="车辆状态", ordinal = 6)
+	private String status;
+	
+	public Car() {
+		super();
+	}
+	
+	public Car(Integer id, String name, String color, String type, Float price, String status) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.color = color;
+		this.type = type;
+		this.price = price;
+		this.status = status;
+	}
+	public String getStatus() {
 		return status;
 	}
-	public void setStatus(Integer status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 	public Integer getId() {
@@ -44,6 +70,13 @@ public class Car {
 	public void setPrice(Float price) {
 		this.price = price;
 	}
+	
+	@Override
+	public String toString() {
+		return "Car [id=" + id + ", name=" + name + ", color=" + color + ", type=" + type + ", price=" + price
+				+ ", status=" + status + "]";
+	}
+	
 	
 	
 }

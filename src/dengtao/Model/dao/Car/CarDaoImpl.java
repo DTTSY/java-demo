@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 import com.mysql.jdbc.PreparedStatement;
 import com.sun.org.apache.regexp.internal.recompile;
 
@@ -14,7 +16,7 @@ import dengtao.Model.pojo.User;
 public class CarDaoImpl implements CarDao{
 
 	@Override
-	public List<Car> getCars(Connection conn, int status) {
+	public List<Car> getCars(Connection conn, String status) {
 		PreparedStatement pstm = null;
 		ResultSet rs=null;
 		List<Car> cars=new ArrayList<>();
@@ -34,7 +36,7 @@ public class CarDaoImpl implements CarDao{
 					car.setColor(rs.getString("color"));
 					car.setPrice(rs.getFloat("price"));
 					car.setType(rs.getString("type"));
-					car.setStatus(rs.getInt("status"));
+					car.setStatus(rs.getString("status"));
 					cars.add(car);
 				}
 			} catch (Exception e) {
@@ -68,7 +70,7 @@ public class CarDaoImpl implements CarDao{
 					car.setColor(rs.getString("color"));
 					car.setPrice(rs.getFloat("price"));
 					car.setType(rs.getString("type"));
-					car.setStatus(rs.getInt("status"));
+					car.setStatus(rs.getString("status"));
 					cars.add(car);
 				}
 			} catch (Exception e) {

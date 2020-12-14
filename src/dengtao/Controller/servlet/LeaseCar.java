@@ -1,6 +1,8 @@
 package dengtao.Controller.servlet;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -26,17 +28,23 @@ public class LeaseCar extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html;charset=utf-8");
 		
-		System.out.println(request.getParameter("city"));
-		System.out.println(request.getParameter("region"));
-		System.out.println(request.getParameter("rentDays"));
-		System.out.println(request.getParameter("car"));
-		System.out.println(request.getParameter("date"));
-		System.out.println(request.getParameter("total"));
+		String rs = null;
+		User user = (User)request.getSession().getAttribute("USER_SESSION");
+		System.out.println(user.getName());
 		
+		Map<String, Object> orderMap = new HashMap<>();
+		orderMap.put("beginDate", request.getParameter("beginDate"));
+		orderMap.put("endDate", request.getParameter("endDate"));
+		orderMap.put("user", user.getName());
+		orderMap.put("carId", request.getParameter("carId"));
+		orderMap.put("price", request.getParameter("price"));
+		orderMap.put("total", request.getParameter("total"));
+		orderMap.put("city", request.getParameter("city"));
+		orderMap.put("rentDays", request.getParameter("rentDays"));
 		OrderService orderService=new OrderServiceImpl();
-		orderService.leaseCar(request.getParameter("date"), request.getParameter("car"), request.getParameter("total"), request.getParameter("city")+"/"+request.getParameter("region"), (User)request.getSession().getAttribute("USER_SESSION"));
+		rs = orderService.addOrder(orderMap);
 		
-		response.getWriter().write("{\"ok\": 1}");
+		response.getWriter().write(rs);
 	}
 
 	/**

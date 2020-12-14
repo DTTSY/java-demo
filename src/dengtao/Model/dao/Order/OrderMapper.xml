@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <!-- namespace 绑定对应的dao/mapper接口 -->
+<mapper namespace="dengtao.Model.dao.Order.OrderMapper">
+  <select id="getOrders" resultType="dengtao.Model.pojo.Order">
+    select * from `Order`
+  </select>
+  
+  <insert id="addOrder" parameterType="map">
+  insert into `Order`(`orderDate`, `user`, `carId`, `price`, `city`, `repayDate`, `total`,`days`) values(#{beginDate}, #{user}, #{carId}, #{price}, #{city}, #{endDate}, #{total}, #{rentDays});
+  </insert>
+  
+  <update id="modifyOrder" parameterType="map">
+  update `Order` set `carId`=#{carId}, `price`=#{price}, `user`=#{user}, `orderDate`=#{orderDate}, `repayDate`=#{repayDate}, `city`=#{city}, `days`=#{days}, `total`=#{total} where `id`=#{oldId};
+  </update>
+  
+  <delete id="deleteOrder" parameterType="int">
+  delete from `Order` where `id`=#{id};
+  </delete>
+  
+</mapper>

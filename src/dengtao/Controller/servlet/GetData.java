@@ -12,6 +12,8 @@ import dengtao.Model.service.Order.OrderService;
 import dengtao.Model.service.Order.OrderServiceImpl;
 import dengtao.Model.service.car.CarService;
 import dengtao.Model.service.car.CarServiceImpl;
+import dengtao.Model.service.fix.FixService;
+import dengtao.Model.service.fix.FixServiceImpl;
 
 /**
  * Servlet implementation class GetData
@@ -40,14 +42,21 @@ public class GetData extends HttpServlet {
 		}
 		case "userOrders": {
 			OrderService orderService = new OrderServiceImpl();
+			rs=orderService.getOrdersJson();
+			
 //			User user = (User)request.getSession().getAttribute("USER_SESSION");
 //			rs = orderService.getOrdersJson(user.getName());
-			rs = orderService.getOrdersJson(orderService.getOrders());
+//			rs = orderService.getOrdersJson(orderService.getOrders());
 			break;
 		}
 		case "Cars": {
 			CarService carService = new CarServiceImpl();
 			rs = carService.getCarsToJSON();
+			break;
+		}
+		case "Fixs": {
+			FixService fixService=new FixServiceImpl();
+			rs=fixService.getFixs();
 			break;
 		}
 		case "myOrders": {
@@ -65,7 +74,7 @@ public class GetData extends HttpServlet {
 		default:
 			break;
 		}
-		System.out.println("DataName" + dataName);
+		System.out.println("DataName: " + dataName);
 		System.out.println(rs);
 		response.getWriter().write(rs);
 	}

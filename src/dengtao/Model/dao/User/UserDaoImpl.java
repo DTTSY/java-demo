@@ -89,4 +89,16 @@ public class UserDaoImpl implements UserDao{
 		}
 		return users;
 	}
+
+	@Override
+	public List<User> getUsers() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public User getUserByName(String userName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
