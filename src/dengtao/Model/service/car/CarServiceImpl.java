@@ -111,15 +111,17 @@ public class CarServiceImpl implements CarService {
 
 		JSONObject okJsonObject = new JSONObject();
 		try {
-			
-			carMapper.addCar(info);
-			okJsonObject.put("ok", 1);
+			if (carMapper.addCar(info) > 0) {
+				okJsonObject.put("ok", 1);
+			} else {
+				okJsonObject.put("ok", 0);
+			}
+			session.commit();
 		} catch (Exception e) {
 			// TODO: handle exception
 			okJsonObject.put("ok", 0);
 			e.printStackTrace();
 		} finally {
-			session.commit();
 			session.close();
 		}
 		return okJsonObject.toJSONString();
@@ -130,17 +132,20 @@ public class CarServiceImpl implements CarService {
 		// TODO Auto-generated method stub
 		SqlSession session = MybatisUtils.getSqlSession();
 		CarMapper carMapper = session.getMapper(CarMapper.class);
-		
+
 		JSONObject okJsonObject = new JSONObject();
 		try {
-			carMapper.deleteCar(id);
-			okJsonObject.put("ok", 1);
+			if (carMapper.deleteCar(id) > 0) {
+				okJsonObject.put("ok", 1);
+			} else {
+				okJsonObject.put("ok", 0);
+			}
+			session.commit();
 		} catch (Exception e) {
 			// TODO: handle exception
 			okJsonObject.put("ok", 0);
 			e.printStackTrace();
 		} finally {
-			session.commit();
 			session.close();
 		}
 
@@ -152,20 +157,22 @@ public class CarServiceImpl implements CarService {
 		// TODO Auto-generated method stub
 		SqlSession session = MybatisUtils.getSqlSession();
 		CarMapper carMapper = session.getMapper(CarMapper.class);
-		
+
 		JSONObject okJsonObject = new JSONObject();
 		try {
-			carMapper.modifyCar(info);
-			okJsonObject.put("ok", 1);
+			if (carMapper.modifyCar(info) > 0) {
+				okJsonObject.put("ok", 1);
+			} else {
+				okJsonObject.put("ok", 0);
+			}
+			session.commit();
 		} catch (Exception e) {
 			// TODO: handle exception
 			okJsonObject.put("ok", 0);
-			e.printStackTrace();	
-		}finally {
-			session.commit();
+			e.printStackTrace();
+		} finally {
 			session.close();
 		}
-		
 		return okJsonObject.toJSONString();
 	}
 

@@ -109,23 +109,8 @@ public class OrderServiceImpl implements OrderService {
 		SqlSession session = MybatisUtils.getSqlSession();
 		OrderMapper orderMapper = session.getMapper(OrderMapper.class);
 		List<Order> orders = orderMapper.getOrders();
-
-		JSONObject rs = new JSONObject(true);
-		JSONObject col = new JSONObject(true);
-		col.put("订单编号", "订单编号");
-		col.put("车辆编号", "车辆编号");
-		col.put("日租金", "日租金");
-		col.put("租车用户", "租车用户");
-		col.put("起始日期", "起始日期");
-		col.put("还车日期", "还车日期");
-		col.put("取车地点", "取车地点");
-		col.put("租车天数", "租车天数");
-		col.put("租车费用", "租车费用");
-
-		rs.put("col", col);
-		rs.put("list", orders);
-
-		return JSON.toJSONString(rs, SerializerFeature.WriteMapNullValue);
+		session.close();
+		return orderListToJSON(orders);
 	}
 
 	@Override
@@ -137,12 +122,12 @@ public class OrderServiceImpl implements OrderService {
 		JSONObject okJsonObject = new JSONObject();
 		try {
 			orderMapper.addOrder(info);
-			okJsonObject.put("ok", 1);	
+			okJsonObject.put("ok", 1);
+			session.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 			okJsonObject.put("ok", 0);
 		} finally {
-			session.commit();
 			session.close();
 		}
 
@@ -160,12 +145,12 @@ public class OrderServiceImpl implements OrderService {
 		try {
 			orderMapper.modifyOrder(info);
 			okJsonObject.put("ok", 1);
+			session.commit();
 		} catch (Exception e) {
 			// TODO: handle exception
 			okJsonObject.put("ok", 0);
 			e.printStackTrace();
 		} finally {
-			session.commit();
 			session.close();
 		}
 		return okJsonObject.toJSONString();
@@ -182,14 +167,43 @@ public class OrderServiceImpl implements OrderService {
 		try {
 			orderMapper.deleteOrder(id);
 			okJsonObject.put("ok", 1);
+			session.commit();
 		} catch (Exception e) {
 			// TODO: handle exception
 			okJsonObject.put("ok", 0);
 			e.printStackTrace();
 		} finally {
-			session.commit();
 			session.close();
 		}
 		return okJsonObject.toJSONString();
 	}
+
+	@Override
+	public String getMyorders(String name) {
+		// TODO Auto-generated method stub
+		SqlSession session = MybatisUtils.getSqlSession();
+		OrderMapper orderMapper = session.getMapper(OrderMapper.class);
+		List<Order> orders = orderMapper.getMyOrders(name);
+		session.close();
+		return orderListToJSON(orders);
+	}
+	
+	private String orderListToJSON(List<Order> orders) {
+		JSONObject rs = new JSONObject(true);
+		JSONObject col = new JSONObject(true);
+		col.put("订单编号", "订单编号");
+		col.put("车辆编号", "车辆编号");
+		col.put("日租金", "日租金");
+		col.put("租车用户", "租车用户");
+		col.put("起始日期", "起始日期");
+		col.put("还车日期", "还车日期");
+		col.put("取车地点", "取车地点");
+		col.put("租车天数", "租车天数");
+		col.put("租车费用", "租车费用");
+		rs.put("col", col);
+		rs.put("list", orders);
+		return JSON.toJSONString(rs, SerializerFeature.WriteMapNullValue);
+	}
 }
+
+

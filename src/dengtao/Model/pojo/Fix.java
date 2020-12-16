@@ -2,14 +2,27 @@ package dengtao.Model.pojo;
 
 import java.util.Date;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 public class Fix {
+	@JSONField(name="维修编号", ordinal = 1)
 	private Integer id;
-	private Date fixDate;
-	private String F_case;
+	
+	@JSONField(name="车辆编号", ordinal = 2)
 	private Integer carId;
-	private Float price;
+	
+	@JSONField(name="故障描述", ordinal = 3)
+	private String F_case;
+	
+	@JSONField(name="送修日期", ordinal = 4)
+	private Date fixDate;
+	
+	@JSONField(name="修复日期", ordinal = 5)
 	private String fixedDate;
 
+	@JSONField(name="维修费用", ordinal = 6)
+	private Float price;
+	
 	public Fix() {
 		super();
 	}

@@ -5,7 +5,11 @@
  <!-- namespace 绑定对应的dao/mapper接口 -->
 <mapper namespace="dengtao.Model.dao.Order.OrderMapper">
   <select id="getOrders" resultType="dengtao.Model.pojo.Order">
-    select * from `Order`
+    select * from `Order`;
+  </select>
+  
+  <select id="getMyOrders" parameterType="string" resultType="dengtao.Model.pojo.Order">
+    select * from `Order` where `name`=#{name};
   </select>
   
   <insert id="addOrder" parameterType="map">

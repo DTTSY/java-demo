@@ -4,7 +4,7 @@
 
 <!DOCTYPE html>
 <html>
-<head><meta charset="UTF-8">
+<head>
 <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 <title>系统主界面</title>
 <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
@@ -28,12 +28,14 @@
 					<el-submenu index="2">
 						<span  slot="title">系统信息</span>
 						<el-menu-item index="2-0" @click.native.prevent="showShelt('Cars', 0)">车辆信息管理</el-menu-item>
-						<el-menu-item index="2-1" @click.native.prevent="showShelt('userOrders', 1)">租车管理</el-menu-item>
-						<el-menu-item index="2-2" @click.native.prevent="showShelt('Cars', 2)">还车管理</el-menu-item>
-						<el-menu-item index="2-3" @click.native.prevent="showShelt('Cars', 3)">车辆修理管理</el-menu-item>
+						<el-menu-item index="2-1" @click.native.prevent="showShelt('Orders', 1)">租车历史查看</el-menu-item>
+						<el-menu-item index="2-3" @click.native.prevent="showShelt('Fixs', 2)">车辆维修历史查看</el-menu-item>
 					</el-submenu>
-					<el-menu-item index="3" @click.native.prevent="showMain">利润分析</el-menu-item>
-					<el-menu-item index="4" @click.native.prevent="logout">登出</a></el-menu-item>
+					<el-menu-item index="3" @click.native.prevent="showMain">送修</el-menu-item>
+					<el-menu-item index="4" @click.native.prevent="showMain">维修</el-menu-item>
+					<el-menu-item index="5" @click.native.prevent="showMain">利润分析</el-menu-item>
+					<el-menu-item index="6" @click.native.prevent="showMain"></el-menu-item>
+					<el-menu-item index="7" @click.native.prevent="logout">登出</a></el-menu-item>
 				</el-menu>
 			</el-aside>
 
@@ -56,11 +58,6 @@
 							</div>
 
 						</el-row>
-
-						<!-- <div slot="header" class="clearfix">
-							<span>增加</span>
-							<el-button  type="primary" icon="el-icon-circle-plus-outline" circle></i></el-button>
-						  </div> -->
 
 						<el-table  v-loading="loading" :data="tableList.slice((currentPage-1)*pageSize,currentPage*pageSize)" :fit="true" :show-header="true" stripe="true">
 							<el-table-column v-for="(value,name) in this.tableListCol" :prop="name" :label="value"></el-table-column>

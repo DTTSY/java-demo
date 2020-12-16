@@ -14,7 +14,7 @@
   </insert>
   
   <delete id="deleteCar" parameterType="int">
-  delete from `Car` where `id`=#{id};
+  delete from `Car` where `id`=#{id} and `status` not in('租出未还', '维修');
   </delete>
   
   <update id="modifyCar" parameterType="map">

@@ -4,7 +4,7 @@
 
 <!DOCTYPE html>
 <html>
-<head><meta charset="UTF-8">
+<head>
 <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 <title>系统主界面</title>
 <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
@@ -29,24 +29,15 @@
 					<el-submenu index="2" >
 						<span  slot="title">普通用户功能</span>
 						<el-menu-item index="1-1" @click.native.prevent="iniForm">租车</el-menu-item>
-						<el-menu-item index="1-2"  disabled @click.native.prevent="showOrder">我的订单</el-menu-item><!-- @click.native.prevent="showOrder" -->
+						<el-menu-item index="1-2"  disabled @click.native.prevent="showOrder">我的订单</el-menu-item>
 					</el-submenu>
 					<el-menu-item index="4" @click.native.prevent="logout">登出</a></el-menu-item>
 				</el-menu>
 			</el-aside>
 		
 				<el-main >
-					<!-- <el-carousel :interval="4000"  arrow="always" type="card">
-						<el-carousel-item v-for="(img,index) in carImage" :key="index">
-							<el-image 
-								style="width: 100%"
-								src="${pageContext.request.contextPath}/static/image/1.jpg"
-								></el-image>
-						  </el-carousel-item>
-					  </el-carousel> -->
-
-					  <el-card shadow="hover" body-style="left: 50%;">
-						<el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm" v-show="showForm">
+					  <el-card  v-show="showForm" shadow="hover" class="form_area" body-style="left: 50%;">
+						<el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm" >
 
 							<el-form-item label="取车城市" required>
 								<el-col :span="11">
@@ -110,40 +101,22 @@
 									<el-button @click="ruleForm.dialogFormVisible = false">取 消</el-button>
 									<el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
 									</div>
-							  </el-dialog>
+							</el-dialog>
 
 						  </el-form>
 					  </el-card>
 
 					  <el-card v-show="showOrders">
-						<div slot="header" class="clearfix">
-							<span>订单</span>
-						  </div>
-
-						<!-- <el-table :data="tableList" :fit="true" :show-header="true" stripe="true">
-							<el-table-column v-for="(value,name) in tableListCol" :prop="name" :label="value"></el-table-column>
-
+						<el-table :data="tableList" :fit="true" :show-header="true" stripe="true">
+							<el-table-column v-for="(value, key) in this.tableListCol" :prop="key" :label="value"></el-table-column>
 							<el-table-column label="操作" fixed="right" width="200px">
 								<template slot-scope="scope">
-									<el-button mc-type="column-el-button" size="mini" type="primary"  icon="el-icon-edit" round>编辑</el-button>
-									<el-button mc-type="column-el-button" size="mini" type="primary"  icon="el-icon-edit" round>编辑</el-button>
-								</template>
-							</el-table-column>
-
-						</el-table> -->
-
-						<el-table :data="this.tableList.slice((currentPage-1)*pageSize,currentPage*pageSize)" :fit="true" :show-header="true" stripe="true">
-							<el-table-column v-for="(value,name) in this.tableListCol" :prop="name" :label="value"></el-table-column>
-							<el-table-column label="操作" fixed="right" width="200px">
-								<template slot-scope="scope">
-								<el-button mc-type="column-el-button" size="mini" type="primary" @click="1+0" icon="el-icon-edit" round>编辑</el-button>
-								<el-button mc-type="column-el-button" size="mini" type="danger"  @click="1+0" icon="el-icon-delete" round>删除</el-button>
+								<el-button mc-type="column-el-button" size="mini" type="primary"  icon="el-icon-edit" round>还车</el-button>
 								</template>
 							</el-table-column>
 						</el-table>
 						
 						<el-pagination style="margin-left: -5px;" @current-change="handleCurrentChange" layout="prev,pager,next" :total="tableList.length" :current-page.sync="currentPage" :page-size="pageSize" :pager-count="5"></el-pagination>
-						<h3 v-for="(value,name) in this.tableListCol">value :{{value}}name :{{name}} </h3>
 					</el-card>
 
 				</el-main>

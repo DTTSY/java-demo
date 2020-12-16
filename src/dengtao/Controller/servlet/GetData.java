@@ -40,13 +40,9 @@ public class GetData extends HttpServlet {
 			rs = carService.getAvailableCarsToJSON();
 			break;
 		}
-		case "userOrders": {
+		case "Orders": {
 			OrderService orderService = new OrderServiceImpl();
 			rs=orderService.getOrdersJson();
-			
-//			User user = (User)request.getSession().getAttribute("USER_SESSION");
-//			rs = orderService.getOrdersJson(user.getName());
-//			rs = orderService.getOrdersJson(orderService.getOrders());
 			break;
 		}
 		case "Cars": {
@@ -71,8 +67,10 @@ public class GetData extends HttpServlet {
 			}
 			break;
 		}
-		default:
+		default:{
+			rs = "null";
 			break;
+			}
 		}
 		System.out.println("DataName: " + dataName);
 		System.out.println(rs);

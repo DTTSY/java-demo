@@ -1,5 +1,5 @@
-var DATA = function(){
-    var validatePass = (rule, value, callback) => {
+let DATA = function(){
+    let validatePass = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('请再次输入密码！'));
         } else if ( value !== this.singnUpForm.psw ) {
@@ -9,9 +9,9 @@ var DATA = function(){
         }
       };
 
-      var validateName = (rule, value, callback) => {
-        if (!/^[a-zA-Z][a-zA-Z0-9_]{3,15}$/.test(value)) {
-            callback(new Error('允许字母开头，允许4-15字节，允许字母数字下划线组合'));
+      let validateName = (rule, value, callback) => {
+        if (!/^[a-zA-Z][a-zA-Z0-9_]{3,10}$/.test(value)) {
+            callback(new Error('允许字母开头，允许4-9字节，允许字母数字下划线组合'));
         }else {
           callback();
         }
@@ -21,7 +21,7 @@ return {
     loginForm: {
     name: '',
     psw: '',
-    type: ''
+    authority: false,
     },
     singnUpForm: {
         name: '',
@@ -44,8 +44,8 @@ return {
     }
 };
 
-var _t=this;
-var app = Vue.extend({
+let _t=this;
+let app = Vue.extend({
     data: DATA,
     mounted: function(){
     },
@@ -53,11 +53,11 @@ var app = Vue.extend({
         submitForm(formName) {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
-                    var that=this;
+                    let that=this;
                     if(that.login){
                     $.ajax({
                         url: "Login.do",
-                        data: {name: that.loginForm.name, psw: that.loginForm.psw},
+                        data: {name: that.loginForm.name, psw: that.loginForm.psw, authority: that.loginForm.authority},
                         type: "GET",
                         dataType: "json",
                         success: function(data) {

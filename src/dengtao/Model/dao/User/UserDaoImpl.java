@@ -28,7 +28,7 @@ public class UserDaoImpl implements UserDao{
 					user=new User();
 					user.setName(rs.getString("name"));
 					user.setPsw(rs.getString("psw"));
-					user.setAuthority(rs.getInt("Authority")==0);
+					user.setAuthority(rs.getInt("Authority")==1);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

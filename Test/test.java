@@ -16,6 +16,8 @@ import dengtao.Model.service.Order.OrderService;
 import dengtao.Model.service.Order.OrderServiceImpl;
 import dengtao.Model.service.car.CarService;
 import dengtao.Model.service.car.CarServiceImpl;
+import dengtao.Model.service.fix.FixService;
+import dengtao.Model.service.fix.FixServiceImpl;
 
 
 public class test {
@@ -24,10 +26,12 @@ public class test {
 //		testorder();
 //		CarService carService=new CarServiceImpl();
 //		System.out.println(carService.getCarsToJSON());
-		OrderService orderService=new OrderServiceImpl();
-		System.out.println(orderService.getOrdersJson());
-//		testUser();
+//		OrderService orderService=new OrderServiceImpl();
+//		System.out.println(orderService.getOrdersJson());
+		testUser();
 //		testfix();
+		FixService fixService=new FixServiceImpl();
+		System.out.println(fixService.getFixs());
 //		CarService carService=new CarServiceImpl();
 //		Map<String, Object> carMap=new HashMap<>();
 //		carMap.put("name", "t78est1");

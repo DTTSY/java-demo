@@ -3,7 +3,7 @@
 let vueData = function () {
     return {
       tableListCol: {},
-      tableList : [],
+      tableList: [],
       currentPage : 1,
       radioGroup : "",
       pageSize: 9,
@@ -25,7 +25,7 @@ let vueData = function () {
         type: [],
         resource: '',
         city: '',
-        value1: [new Date(2020, 12, 11, 10, 10), new Date(2020, 12, 12, 10, 10)],
+        value1: ['', ''],
         rentDays: function (day) {
           return Math.floor((day[1]-day[0])/(24*3600*1000));
         },
@@ -112,9 +112,18 @@ var Ctor = Vue.extend({
                 let d1 = moment(_t.ruleForm.value1[0]).format('YYYY-MM-DD');
                 let d2 = moment(_t.ruleForm.value1[1]).format('YYYY-MM-DD');
                 let days= _t.ruleForm.rentDays(_t.ruleForm.value1);
+                let data={
+                  price: _t.ruleForm.total(_t.optionss)/days,
+                  city: _t.ruleForm.city + "/" +_t.ruleForm.region,
+                  rentDays: days,
+                  carId: _t.ruleForm.car,
+                  beginDate: d1,
+                  total: _t.ruleForm.total(_t.optionss),
+                  endDate: d2
+                }
                 $.ajax({
                   url: "LeaseCar.do",
-                  data: {price: _t.ruleForm.total(_t.optionss)/days, city: _t.ruleForm.city + "/" +_t.ruleForm.region, rentDays: days, carId: _t.ruleForm.car, beginDate: d1, total: _t.ruleForm.total(_t.optionss), endDate: d2},
+                  data: data,
                   type: "GET",
                   dataType: "json",
                   success: function(data){
@@ -159,9 +168,10 @@ var Ctor = Vue.extend({
         logout() {
           self.location.href="Logout.do";
         },
-        iniForm: function () {
-          this.showForm=true;
+        iniForm(){
           let _t=this;
+          _t.showForm=true;
+          _t.showOrders=false;
           $.ajax({
             url: "GetData.do",
             data: {dataName: "availableCars"},
@@ -170,7 +180,7 @@ var Ctor = Vue.extend({
             success: function(data){
               if(data.ok!=0){
                 _t.optionss = JSON.parse(JSON.stringify(data.data));
-                console.log(_t.optionss);
+                console.log('shoeform ; '+_t.optionss);
               }else{
                 Swal.fire({
                 icon: 'error',
@@ -183,20 +193,20 @@ var Ctor = Vue.extend({
             console.log(_t.ruleForm.optionss);
         },
         showOrder(){
-          this.showOrders=true;
           let _t = this;
+          _t.showForm=false;
+          _t.showOrders=true;
 
           $.ajax({
             url: "GetData.do",
-            data: {dataName: "myOrders"},
+            data: {dataName: "Orders"},
             type: "GET",
             dataType: "json",
             success: function(data){
               if(data!=null){
-                _t.tatableList = data.list;
+                _t.tableList= data.list;
                 _t.tableListCol = data.col;
-                console.log(_t.tatableList);
-                console.log(_t.tableListCol);
+                console.log(_t.tableList);
               }else{
                 Swal.fire({
                 icon: 'error',

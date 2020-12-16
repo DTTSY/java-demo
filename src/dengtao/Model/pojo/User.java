@@ -2,11 +2,20 @@ package dengtao.Model.pojo;
 
 import java.io.Serializable;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 @SuppressWarnings("serial")
 public class User implements Serializable{
+	@JSONField(name="用户名", ordinal = 1)
 	private String name;
+	
+	@JSONField(name="密码", ordinal = 2)
 	private String psw;
+	
+	@JSONField(name="订单编号", ordinal = 3)
 	private Integer orderId;
+	
+	@JSONField(name="权限", ordinal = 4)
 	private Boolean authority;
 	
 	public User() {

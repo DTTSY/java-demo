@@ -70,6 +70,7 @@ let Ctor = Vue.extend({
                         case 0:{
                             id = row.车辆编号;
                             DeleteType='deleteCar';
+                            status = row.车辆状态;
                             break;
                         }
                         case 1:{
@@ -80,10 +81,10 @@ let Ctor = Vue.extend({
                             break;
                     }
                     console.log(id);
-
+                    
                     $.ajax({
                         url: "DeleteData.do",
-                        data: {DeleteType: DeleteType, id: id},
+                        data: {DeleteType: DeleteType, id: id,status: status},
                         type: "GET",
                         dataType: "json",
                         success: function(data) {
@@ -94,6 +95,8 @@ let Ctor = Vue.extend({
                                     text: '修改数据成功'
                                     });
                                 //console.log(data.url);
+                                _t.tableList.splice(index,1);
+                                _t.rendering;
                             }
                             Swal.fire({
                                 icon: 'error',
@@ -113,9 +116,6 @@ let Ctor = Vue.extend({
                     });
                 }
               });
-            
-            this.tableList.splice(index,1);
-            this.rendering;
         },
         handleModify(index, row,){
             this.itemIndex = index + (this.currentPage-1)*this.pageSize;
@@ -271,7 +271,17 @@ let Ctor = Vue.extend({
                     break;
                 }
                 case 1:{
-                    
+                    addData = {
+                        AddType: 'addOrder',
+                        DataName: 'Orders',
+                        tableno: this.tableNo,
+                        name: this.car.车辆名称,
+                        color: this.car.车辆颜色,
+                        type: this.car.车辆类型,
+                        id: this.car.车辆编号,
+                        price: this.car.车辆计价,
+                        status: this.car.车辆状态
+                    }
                     break;
                 }
                 default:
@@ -329,8 +339,6 @@ let Ctor = Vue.extend({
                     if(data!=null){
                         _t.tableList = data.list;
                         _t.tableListCol = data.col;
-                        
-                        //console.log(data.url);
                     }
                     else{
                         Swal.fire({
@@ -339,8 +347,18 @@ let Ctor = Vue.extend({
                                     text: '获取数据失败！！'
                                 });
                     }
+                },
+                error : function(e){
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'X﹏X',
+                        text: '获取数据失败！！'
+                    });
+                    console.log(e.status);
+                    console.log(e.responseText);
                 }
             });
+
             setTimeout(()=>_t.loading=false, 1000);
         },
         logout() {

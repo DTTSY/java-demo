@@ -22,18 +22,21 @@ public class Login extends HttpServlet {
 
 		String name = request.getParameter("name");
 		String psw = request.getParameter("psw");
-		
+		boolean authority = Boolean.parseBoolean(request.getParameter("authority")) ;
 		UserService userService = new UserServiceImpl();
 		User user = userService.login(name, psw);
 		
 		JSONObject data = new JSONObject();
-		if(user!=null) {
+		System.out.println(request.getParameter("authority"));
+		System.out.println(authority);
+		System.out.println(user);
+		if(user!=null && user.getAuthority().equals(authority)) {
 			//保存登陆用户的信息
 			request.getSession().setAttribute("USER_SESSION",user);
-			if(user.getAuthority())
-				data.put("url", "jsp/UserMain.jsp");
-			else 
+			if(authority)
 				data.put("url", "jsp/Admin.jsp");
+			else 
+				data.put("url", "jsp/UserMain.jsp");
 		}else {
 			data.put("url", "null");
 		}
