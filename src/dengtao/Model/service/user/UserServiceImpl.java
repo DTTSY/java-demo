@@ -23,7 +23,6 @@ public class UserServiceImpl implements UserService{
 	public User login(String name, String psw) {
 		Connection connection=null;
 		User user=null;
-		
 		try {
 			connection=BaseDao.getConnection();
 			user=userDao.getUserByName(connection, name);

@@ -14,4 +14,6 @@ public interface CarService {
 	public String addCar(Map<String, Object> info);
 	public String deleteCar(int id);
 	public String modifyCar(Map<String, Object> info);
+	public String getCarsByStatus(String status);
+	
 }

@@ -22,10 +22,19 @@ let vueData = function () {
             租车天数: '',
             租车费用: ''
         },
+        fixForm:{
+            F_case: '',
+            fixedDate: '',
+            price:'',
+            rules:{
+            },
+            price:''
+        },
         editItem: "",
         itemId:'',
         itemIndex:'',
-        dialogFormVisible: false,
+        dialogFormModify: false,
+        dialogFormFixingCar: false,
         tableListCol: {},
         tableList : [],
         currentPage : 1,
@@ -40,7 +49,38 @@ let vueData = function () {
         colorPicker : "",
         slider : 0,
         fileList : [],
-        loading: true
+        loading: true,
+        fixDate:['',''],
+        pickerOptions: {
+          shortcuts: [{
+            text: '最近一周',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近一个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近三个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              picker.$emit('pick', [start, end]);
+            }
+          }]
+        },
+        dateRang: '',
+        showChart: false,
+        profit: 0
 }
 }
 
@@ -148,11 +188,38 @@ let Ctor = Vue.extend({
                     }
                     break;
                 }
+                case 3:{
+                    this.itemId=row.车辆编号;
+                    this.editItem = {
+                        车辆编号: row.车辆编号,
+                        车辆名称: row.车辆名称,
+                        车辆颜色: row.车辆颜色,
+                        车辆类型: row.车辆类型,
+                        车辆计价: row.车辆计价,
+                        车辆状态: row.车辆状态,
+                    };
+
+                }
+                case 4:{
+                    this.itemId=row.维修编号;
+                    this.editItem = {
+                        维修编号: row.维修编号,
+                        车辆编号: row.车辆编号,
+                        故障描述: this.fixForm.F_case,
+                        送修日期: row.送修日期,
+                        修复日期: this.fixForm.fixedDate,
+                        维修费用: this.fixForm.price
+                }
+            }
                 default:{
                     break;
                 }
             }
-            this.dialogFormVisible=true;
+            if ( this.tableNo==3 || this.tableNo==4 ) {
+                this.dialogFormFixingCar=true;
+            } else {
+            this.dialogFormModify=true;
+            }
         },
         showMain(){
             this.showTable=false;
@@ -161,7 +228,7 @@ let Ctor = Vue.extend({
             let _t = this;
             let modifyData = '';
 
-            switch (this.tableNo) {
+            switch (_t.tableNo) {
                 case 0:{
                     modifyData = {
                         modifyType: "modifyCar",
@@ -191,6 +258,25 @@ let Ctor = Vue.extend({
                     }
                     break;
                 }
+                case 3:{
+                    modifyData={
+                       modifyType: "fixingCar",
+                       carId:_t.editItem.车辆编号,
+                       fixingDate: moment(_t.fixDate[0]).format('YYYY-MM-DD'),
+                       name: _t.editItem.车辆名称,
+                    }
+                    break;
+                }
+                case 4:{
+                    modifyData={
+                        modifyType: "fixedCar",
+                        carId:_t.editItem.车辆编号,
+                        fixedDate: moment(_t.fixForm.fixedDate).format('YYYY-MM-DD'),
+                        price: _t.fixForm.price,
+                        F_case: _t.fixForm.F_case,
+                        id: _t.editItem.维修编号
+                     }
+                }
                 default:
                     break;
             }
@@ -202,7 +288,8 @@ let Ctor = Vue.extend({
                 dataType: "json",
                 success: function(data) {
                     if(data.ok == 1){
-                        _t.dialogFormVisible = false;
+                        _t.dialogFormModify = false;
+                        _t.dialogFormFixingCar=false;
                         Swal.fire({
                             icon: 'success',
                             title: '(๑•̀ㅂ•́)و✧',
@@ -213,6 +300,7 @@ let Ctor = Vue.extend({
                         //console.log(data.url);
                     }
                     else{
+                        _t.dialogFormFixingCar=false;
                         _t.dialogFormVisible = false;
                         Swal.fire({
                                     icon: 'error',
@@ -222,6 +310,7 @@ let Ctor = Vue.extend({
                     }
                 },
                 error : function(e){
+                    _t.dialogFormFixingCar=false;
                     _t.dialogFormVisible = false;
                     Swal.fire({
                         icon: 'error',
@@ -326,10 +415,11 @@ let Ctor = Vue.extend({
         }, 
         showShelt(Dataname, tableno) {
             let _t = this;
+            _t.showChart=false;
             _t.loading=true;
-            this.showTable=true;
+            _t.showTable=true;
             _t.tableNo = tableno;
-
+            console.log(_t.tableNo);
             $.ajax({
                 url: "GetData.do",
                 data: {dataName: Dataname},
@@ -366,10 +456,82 @@ let Ctor = Vue.extend({
         },
         handleCurrentChange(val) {
             this.currentPage=val;
+        },
+        showProfit(){
+            let data={
+                dataName:'profit',
+                begingDate: moment(this.dateRang[0]).format('YYYY-MM-DD'),
+                endDate: moment(this.dateRang[1]).format('YYYY-MM-DD')
+            }
+            console.log(data.begingDate);
+            console.log(data.endDate);
+            let _t=this;
+            $.ajax({
+                url: "GetData.do",
+                data: data,
+                type: "GET",
+                dataType: "json",
+                success: function(data) {
+                    if(data!=null){
+                        let pieData = data.pieDate;
+                        _t.profit = data.profit;
+                        // mChart.setOption(option);
+                        let option={
+                            series:[
+                            {
+                                type:'pie',
+                                data: pieData,
+                                label:{
+                                    show: true,
+                                    formatter:function(arg){
+                                        return arg.name + '：'+arg.value+' 元';
+                                    }
+                                }
+                            }
+                            ]
+                        }
+                        mChart.setOption(option);
+                    }
+                    else{
+                        Swal.fire({
+                                    icon: 'error',
+                                    title: 'X﹏X',
+                                    text: '获取数据失败！！'
+                                });
+                    }
+                },
+                error : function(e){
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'X﹏X',
+                        text: '获取数据失败！！'
+                    });
+                    console.log(e.status);
+                    console.log(e.responseText);
+                }
+            });
+
         }
         }
 });
 new Ctor().$mount('#app');
+let mChart = echarts.init(document.querySelector('#chart1'));
+let pieData='';
+let option={
+    series:[
+      {
+        type:'pie',
+        data: pieData,
+        label:{
+            show: true,
+            formatter:function(arg){
+                return arg.name + '：'+arg.value+' 元';
+            }
+        }
+      }
+    ]
+}
+mChart.setOption(option);
 
 /*
 L2Dwidget.init({

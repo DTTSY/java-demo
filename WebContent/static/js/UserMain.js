@@ -10,12 +10,20 @@ let vueData = function () {
       checkboxGroup : [],
       input : "",
       select : "",
+      srcList:[
+        'https://s3.ax1x.com/2020/12/11/rEtYlT.png'
+      ],
       badge : 10,
       slider : 0,
       fileList : [],
-      
       showOrders: false,
       showForm: false,
+      returnDate: new Date(),
+      perDayPrice:'',
+      beginDate: '',
+      carId:'',
+      orderId:'',
+      tableNo: 0,
       ruleForm: {
         name: '',
         region: '',
@@ -25,22 +33,6 @@ let vueData = function () {
         type: [],
         resource: '',
         city: '',
-        value1: ['', ''],
-        rentDays: function (day) {
-          return Math.floor((day[1]-day[0])/(24*3600*1000));
-        },
-        total:function (list) {
-          let _t = this;
-          let price = 0;
-          if(list!=null){
-            for (let index = 0; index < list.length; index++) {
-              if (list[index].value == _t.car) {
-                price = list[index].price;
-              }
-            }
-            return price * _t.rentDays(_t.value1);
-          }else{return price;}
-          },
           dialogFormVisible: false,
           car: '',
           options: [{
@@ -81,7 +73,7 @@ let vueData = function () {
           car: [
             { required: true, message: '请选择车型', trigger: 'change' }
           ],
-          value1: [
+          date1: [
             {required: true, message: '请选择日期', trigger: 'change' }
           ],
           date2: [
@@ -96,8 +88,8 @@ let vueData = function () {
 
 //定义的数据覆盖布局器自动识别的变量
 
-var _t = this;
-var Ctor = Vue.extend({
+let = this;
+let Ctor = Vue.extend({
     //提前绑定的变量
     data: vueData,
     mounted:function(){
@@ -108,18 +100,14 @@ var Ctor = Vue.extend({
           let _t=this;
             this.$refs[formName].validate((valid) => {
               if (valid) {
-                _t.ruleForm.dialogFormVisible=false;
-                let d1 = moment(_t.ruleForm.value1[0]).format('YYYY-MM-DD');
-                let d2 = moment(_t.ruleForm.value1[1]).format('YYYY-MM-DD');
-                let days= _t.ruleForm.rentDays(_t.ruleForm.value1);
+                //_t.ruleForm.dialogFormVisible=false;
+                let d1 = moment(_t.ruleForm.date1).format('YYYY-MM-DD');
                 let data={
-                  price: _t.ruleForm.total(_t.optionss)/days,
+                  action: 'lease',
                   city: _t.ruleForm.city + "/" +_t.ruleForm.region,
-                  rentDays: days,
                   carId: _t.ruleForm.car,
+                  price: _t.carPrice(_t.optionss),
                   beginDate: d1,
-                  total: _t.ruleForm.total(_t.optionss),
-                  endDate: d2
                 }
                 $.ajax({
                   url: "LeaseCar.do",
@@ -131,22 +119,17 @@ var Ctor = Vue.extend({
                       Swal.fire({
                         icon: 'success',
                         title: '(๑•̀ㅂ•́)و✧',
-                        text: '支付成功!',
+                        text: '提交订单成功!',
                         });
                     }else{
                       Swal.fire({
                       icon: 'error',
                       title: 'X﹏X',
-                      text: '支付失败!',
+                      text: '提交订单失败!',
                       });
                     }
                     }
                   });
-                console.log(_t.ruleForm.city);
-                console.log(_t.ruleForm.region);
-                console.log(_t.ruleForm.rentDays(_t.ruleForm.value1));
-                console.log(_t.ruleForm.car);
-                console.log(_t.ruleForm.total(_t.optionss));
               } else {
                 return false;
               }
@@ -156,7 +139,7 @@ var Ctor = Vue.extend({
             let _t=this;
               this.$refs[formName].validate((valid) => {
                 if (valid) {
-                  _t.ruleForm.dialogFormVisible = true;
+                  _t.submitForm('ruleForm');
                 } else {
                   return false;
                 }
@@ -168,18 +151,31 @@ var Ctor = Vue.extend({
         logout() {
           self.location.href="Logout.do";
         },
+        carPrice(list) {
+          let _t = this;
+          let price = 0;
+          if(list!=null){
+            for (let index = 0; index < list.length; index++) {
+              if (list[index].value == _t.ruleForm.car) {
+                price = list[index].price;
+              }
+            }
+          }
+          console.log(price);
+          return price;
+          },
         iniForm(){
           let _t=this;
           _t.showForm=true;
           _t.showOrders=false;
           $.ajax({
             url: "GetData.do",
-            data: {dataName: "availableCars"},
+            data: {dataName: "carOptions"},
             type: "GET",
             dataType: "json",
             success: function(data){
               if(data.ok!=0){
-                _t.optionss = JSON.parse(JSON.stringify(data.data));
+                _t.optionss = data.data;
                 console.log('shoeform ; '+_t.optionss);
               }else{
                 Swal.fire({
@@ -192,21 +188,20 @@ var Ctor = Vue.extend({
             });
             console.log(_t.ruleForm.optionss);
         },
-        showOrder(){
+        showOrder(tableno){
           let _t = this;
           _t.showForm=false;
           _t.showOrders=true;
-
+          _t.tableNo=tableno;
           $.ajax({
             url: "GetData.do",
-            data: {dataName: "Orders"},
+            data: {dataName: "myOrders",option: tableno},
             type: "GET",
             dataType: "json",
             success: function(data){
               if(data!=null){
                 _t.tableList= data.list;
                 _t.tableListCol = data.col;
-                console.log(_t.tableList);
               }else{
                 Swal.fire({
                 icon: 'error',
@@ -216,6 +211,73 @@ var Ctor = Vue.extend({
               }
               }
             });
+        },
+        handleRetronCar(index, row){
+          this.beginDate = moment(row.起始日期, "YYYY-MM-DD");
+          this.perDayPrice = row.日租金;
+          this.ruleForm.dialogFormVisible = true;
+          this.carId=row.车辆编号;
+          this.orderId=row.订单编号;
+        },
+        days(){
+          let days = Math.floor((this.returnDate-this.beginDate)/(24*3600*1000));
+          if(days>0){
+            return days;
+          }else
+            return 0;
+        },
+        total(){
+          return this.days()*this.perDayPrice;
+        },
+        submitChenge(){
+          this.ruleForm.dialogFormVisible=false;
+
+          if(this.days()==0){
+            Swal.fire({
+                icon: 'error',
+                title: 'X﹏X',
+                text: '还车日期无效，请重新选择！',
+                });
+          }else{
+            let date={
+              action: 'repay',
+              repayDate: moment(this.returnDate).format('YYYY-MM-DD'),
+              days: this.days(),
+              total: this.total(),
+              carId: this.carId,
+              id: this.orderId,
+            }
+
+            $.ajax({
+              url: "LeaseCar.do",
+              data: date,
+              type: "GET",
+              dataType: "json",
+              success: function(data){
+                if(data.ok==1){
+                  Swal.fire({
+                    icon: 'success',
+                    title: '(๑•̀ㅂ•́)و✧',
+                    text: '还车成功!',
+                   });
+                  
+                }else{
+                  Swal.fire({
+                    icon: 'success',
+                    title: 'X﹏X',
+                    text: '还车失败',
+                    });
+                }
+              },
+              error:function(e){
+                Swal.fire({
+                  icon: 'success',
+                  title: 'X﹏X',
+                  text: '还车失败',
+                  });
+              }
+              });
+          }
         },
         handleCurrentChange(val) {
           this.currentPage=val;

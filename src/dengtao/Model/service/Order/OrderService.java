@@ -16,5 +16,6 @@ public interface OrderService {
 	public String getOrdersJson();
 	public String modifyOrder(Map<String, Object> info);
 	public String deleteOrder(int id);
-	public String getMyorders(String name);
+	public String getMyorders(String name, int option);
+	public String getorderBydate(Map<String, Object> info);
 }

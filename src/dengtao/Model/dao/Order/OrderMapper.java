@@ -11,4 +11,5 @@ public interface OrderMapper {
 	public int modifyOrder(Map<String, Object> info);
 	public int deleteOrder(int id);
 	public List<Order> getMyOrders(String name);
+	public List<Order> getOrdersByDate(Map<String, Object> info);
 }

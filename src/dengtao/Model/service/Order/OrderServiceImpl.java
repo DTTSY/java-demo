@@ -179,13 +179,28 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public String getMyorders(String name) {
+	public String getMyorders(String name, int option) {
 		// TODO Auto-generated method stub
 		SqlSession session = MybatisUtils.getSqlSession();
 		OrderMapper orderMapper = session.getMapper(OrderMapper.class);
 		List<Order> orders = orderMapper.getMyOrders(name);
+		List<Order> histryOrder = new ArrayList<>();
+		
+		if (option==0) {
+			for (Order order : orders) {
+				if (order.getRepayDate()==null) {
+					histryOrder.add(order);
+				}
+			}
+		} else {
+			for (Order order : orders) {
+				if (order.getRepayDate()!=null) {
+					histryOrder.add(order);
+				}
+			}
+		}
 		session.close();
-		return orderListToJSON(orders);
+		return orderListToJSON(histryOrder);
 	}
 	
 	private String orderListToJSON(List<Order> orders) {
@@ -203,6 +218,17 @@ public class OrderServiceImpl implements OrderService {
 		rs.put("col", col);
 		rs.put("list", orders);
 		return JSON.toJSONString(rs, SerializerFeature.WriteMapNullValue);
+	}
+
+	@Override
+	public String getorderBydate(Map<String, Object> info) {
+		// TODO Auto-generated method stub
+		SqlSession session = MybatisUtils.getSqlSession();
+		OrderMapper orderMapper = session.getMapper(OrderMapper.class);
+		List<Order> orders = orderMapper.getOrdersByDate(info);
+		session.close();
+		
+		return orderListToJSON(orders);
 	}
 }
 

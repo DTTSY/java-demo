@@ -1,6 +1,9 @@
 package dengtao.Controller.servlet;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,6 +17,9 @@ import dengtao.Model.service.car.CarService;
 import dengtao.Model.service.car.CarServiceImpl;
 import dengtao.Model.service.fix.FixService;
 import dengtao.Model.service.fix.FixServiceImpl;
+import dengtao.Model.service.profit.profitService;
+import dengtao.Model.service.profit.profitServiceImpl;
+import sun.text.normalizer.Trie.DataManipulate;
 
 /**
  * Servlet implementation class GetData
@@ -34,10 +40,26 @@ public class GetData extends HttpServlet {
 		String rs = null;
 
 		String dataName = request.getParameter("dataName");
+		System.out.println("DataName: " + dataName);
 		switch (dataName) {
+		case "carOptions":{
+			CarService carService=new CarServiceImpl();
+			rs = carService.getAvailableCarsToJSON();
+			break;
+		}
 		case "availableCars": {
 			CarService carService = new CarServiceImpl();
-			rs = carService.getAvailableCarsToJSON();
+			rs = carService.getCarsByStatus("可租");
+			break;
+		}
+		case "fixingCars": {
+			CarService carService = new CarServiceImpl();
+			rs = carService.getCarsByStatus("维修");
+			break;
+		}
+		case "UnderFixing":{
+			FixService fixService=new FixServiceImpl();
+			rs = fixService.getUnderFixing();
 			break;
 		}
 		case "Orders": {
@@ -56,15 +78,18 @@ public class GetData extends HttpServlet {
 			break;
 		}
 		case "myOrders": {
-			Object tempObject = request.getSession().getAttribute("USER_SESSION");
-			
-			if(tempObject != null) {
-				User user = (User)tempObject;
-				OrderService orderService = new OrderServiceImpl();
-				rs = orderService.getOrdersJson(orderService.getOrdersByUser(user.getName()));
-			}else {
-				rs = null;
-			}
+			int option = Integer.parseInt(request.getParameter("option"));
+			User user = (User)request.getSession().getAttribute("USER_SESSION");
+			OrderService orderService=new OrderServiceImpl();
+			rs = orderService.getMyorders(user.getName(), option);
+			break;
+		}
+		case "profit":{
+			Map<String, Object> dateMap=new HashMap<>();
+			dateMap.put("begingDate", request.getParameter("begingDate"));
+			dateMap.put("endDate", request.getParameter("endDate"));
+			profitService profitService=new profitServiceImpl();
+			rs = profitService.getProfit(dateMap);
 			break;
 		}
 		default:{
@@ -72,7 +97,7 @@ public class GetData extends HttpServlet {
 			break;
 			}
 		}
-		System.out.println("DataName: " + dataName);
+		
 		System.out.println(rs);
 		response.getWriter().write(rs);
 	}

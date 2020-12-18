@@ -1,7 +1,5 @@
 package dengtao.Model.pojo;
 
-import java.util.Date;
-
 import com.alibaba.fastjson.annotation.JSONField;
 
 public class Fix {
@@ -15,7 +13,7 @@ public class Fix {
 	private String F_case;
 	
 	@JSONField(name="送修日期", ordinal = 4)
-	private Date fixDate;
+	private String fixDate;
 	
 	@JSONField(name="修复日期", ordinal = 5)
 	private String fixedDate;
@@ -27,7 +25,7 @@ public class Fix {
 		super();
 	}
 
-	public Fix(Integer id, Date fixDate, String f_case, Integer carId, Float price, String fixedDate) {
+	public Fix(Integer id, String fixDate, String f_case, Integer carId, Float price, String fixedDate) {
 		super();
 		this.id = id;
 		this.fixDate = fixDate;
@@ -53,11 +51,11 @@ public class Fix {
 		this.id = id;
 	}
 
-	public Date getFixDate() {
+	public String getFixDate() {
 		return fixDate;
 	}
 
-	public void setFixDate(Date fixDate) {
+	public void setFixDate(String fixDate) {
 		this.fixDate = fixDate;
 	}
 

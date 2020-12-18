@@ -9,6 +9,10 @@
     select * from `Car`;
   </select>
   
+  <select id="getCarsByStatus" parameterType="string"  resultType="dengtao.Model.pojo.Car">
+    select * from `Car` where `status`=#{status};
+  </select>
+  
   <insert id="addCar" parameterType="map">
   insert into `Car`(`name`, `color`, `type`, `price`) values(#{name}, #{color},#{type},#{price});
   </insert>
@@ -17,7 +21,21 @@
   delete from `Car` where `id`=#{id} and `status` not in('租出未还', '维修');
   </delete>
   
+  <!--
   <update id="modifyCar" parameterType="map">
   update `Car` set `name`=#{name}, `color`=#{color}, `type`=#{type}, `price`=#{price}, `status`=#{status} where `id`=#{oldId};
+  </update>
+  -->
+    <!-- 动态sql -->
+  <update id="modifyCar" parameterType="map">
+  update `Car` 
+  <set>
+  	<if test="color != null">`color`=#{color},</if>
+  	<if test="type != null">`type`=#{type},</if>
+  	<if test="price != null">`price`=#{price},</if>
+  	<if test="name != null">`name`=#{name},</if>
+  	<if test="status != null">`status`=#{status}</if>
+  </set>
+  where `id`=#{carId};
   </update>
 </mapper>

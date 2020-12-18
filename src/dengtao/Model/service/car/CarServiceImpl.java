@@ -12,6 +12,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.parser.Feature;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 
 import dengtao.Model.dao.Car.CarDao;
 import dengtao.Model.dao.Car.CarDaoImpl;
@@ -90,17 +91,7 @@ public class CarServiceImpl implements CarService {
 			return null;
 		}
 
-		JSONObject col = new JSONObject(true);
-		col.put("车辆编号", "车辆编号");
-		col.put("车辆名称", "车辆名称");
-		col.put("车辆颜色", "车辆颜色");
-		col.put("车辆类型", "车辆类型");
-		col.put("车辆计价", "车辆计价");
-		col.put("车辆状态", "车辆状态");
-		JSONObject rs = new JSONObject(true);
-		rs.put("col", col);
-		rs.put("list", cars);
-		return JSON.toJSONString(rs);
+		return getCarListToJSON(cars);
 	}
 
 	@Override
@@ -176,4 +167,28 @@ public class CarServiceImpl implements CarService {
 		return okJsonObject.toJSONString();
 	}
 
+	@Override
+	public String getCarsByStatus(String status) {
+		// TODO Auto-generated method stub
+		SqlSession session = MybatisUtils.getSqlSession();
+		CarMapper carMapper = session.getMapper(CarMapper.class);
+		List<Car> cars = carMapper.getCarsByStatus(status);
+		session.close();
+
+		return getCarListToJSON(cars);
+	}
+
+	private String getCarListToJSON(List<Car> cars) {
+		JSONObject col = new JSONObject(true);
+		col.put("车辆编号", "车辆编号");
+		col.put("车辆名称", "车辆名称");
+		col.put("车辆颜色", "车辆颜色");
+		col.put("车辆类型", "车辆类型");
+		col.put("车辆计价", "车辆计价");
+		col.put("车辆状态", "车辆状态");
+		JSONObject rs = new JSONObject(true);
+		rs.put("col", col);
+		rs.put("list", cars);
+		return JSON.toJSONString(rs, SerializerFeature.WriteMapNullValue);
+	}
 }

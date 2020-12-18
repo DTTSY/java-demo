@@ -53,8 +53,10 @@ public class AddData extends HttpServlet {
 			rs=orderService.addOrder(DataMap);
 			break;
 		}
-		default:
+		default:{
+			rs = "null";
 			break;
+			}
 		}
 		System.out.println(rs);
 		response.getWriter().write(rs);

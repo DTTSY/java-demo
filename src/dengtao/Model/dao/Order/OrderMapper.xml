@@ -8,8 +8,13 @@
     select * from `Order`;
   </select>
   
+  <!-- xml中特殊符号需要转译！！-->
+  <select id="getOrdersByDate"  parameterType="map" resultType="dengtao.Model.pojo.Order">
+    select * from `Order` where `orderDate`&gt;=#{begingDate} and `orderDate`&lt;=#{endDate} and `repayDate` is not null;
+  </select>
+  
   <select id="getMyOrders" parameterType="string" resultType="dengtao.Model.pojo.Order">
-    select * from `Order` where `name`=#{name};
+    select * from `Order` where `user`=#{name};
   </select>
   
   <insert id="addOrder" parameterType="map">
@@ -17,7 +22,18 @@
   </insert>
   
   <update id="modifyOrder" parameterType="map">
-  update `Order` set `carId`=#{carId}, `price`=#{price}, `user`=#{user}, `orderDate`=#{orderDate}, `repayDate`=#{repayDate}, `city`=#{city}, `days`=#{days}, `total`=#{total} where `id`=#{oldId};
+  update `Order` 
+  <set>
+  	<if test="carId !=null">`carId`=#{carId},</if>
+  	<if test="price !=null">`price`=#{price},</if>
+  	<if test="user !=null">`user`=#{user},</if>
+  	<if test="orderDate !=null"> `orderDate`=#{orderDate},</if>
+  	<if test="repayDate !=null">`repayDate`=#{repayDate},</if>
+  	<if test="city !=null">`city`=#{city},</if>
+  	<if test="days !=null">`days`=#{days},</if>
+  	<if test="total !=null"> `total`=#{total}</if>
+  </set>
+   where `id`=#{id};
   </update>
   
   <delete id="deleteOrder" parameterType="int">

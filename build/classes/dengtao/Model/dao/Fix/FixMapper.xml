@@ -8,4 +8,21 @@
   <select id="getFixes" resultType="dengtao.Model.pojo.Fix">
     select * from `Fix`
   </select>
+  
+  <select id="getFixByDate" parameterType="map"  resultType="dengtao.Model.pojo.Fix">
+    select * from `Fix` where `fixDate`&gt;=#{begingDate} and `fixedDate`&lt;=#{endDate} and `fixedDate` is not null
+  </select>
+  
+  <select id="getFixsByStatus" resultType="dengtao.Model.pojo.Fix">
+    select * from `Fix` where `fixedDate` is null
+  </select>
+  
+  <insert id="addFixs" parameterType="map">
+  insert into `Fix`(`carId`, `fixDate`, `F_case`, `price`, `fixedDate`) values(#{carId}, #{fixDate},#{F_case},#{price},#{fixedDate});
+  </insert>
+  
+  <update id="modifyFix" parameterType="map">
+  update `Fix` set `F_case`=#{F_case}, `price`=#{F_price},`fixedDate`=#{fixedDate} where `id`=#{id};
+  </update>
+  
 </mapper>

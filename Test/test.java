@@ -1,4 +1,6 @@
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 
@@ -28,19 +30,21 @@ public class test {
 //		System.out.println(carService.getCarsToJSON());
 //		OrderService orderService=new OrderServiceImpl();
 //		System.out.println(orderService.getOrdersJson());
-		testUser();
+//		testUser();
 //		testfix();
 		FixService fixService=new FixServiceImpl();
-		System.out.println(fixService.getFixs());
+//		System.out.println(fixService.getFixs());
 //		CarService carService=new CarServiceImpl();
-//		Map<String, Object> carMap=new HashMap<>();
+		Map<String, Object> orderMap=new HashMap<>();
+		orderMap.put("begingDate", "2020-01-01");
+		orderMap.put("endDate", "2020-12-21");
+		System.out.println(fixService.getFixByDate(orderMap));
 //		carMap.put("name", "t78est1");
 //		carMap.put("color", "t45est1");
 //		carMap.put("type", "te45st1");
 //		carMap.put("price", Float.parseFloat("250"));
 //		carMap.put("status", "test0");
 //		carMap.put("oldId", 23);
-//		System.out.println(carService.modifyCar(carMap));
 	}
 	
 	public static void testcar() {

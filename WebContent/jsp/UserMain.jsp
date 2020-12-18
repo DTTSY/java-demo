@@ -29,7 +29,8 @@
 					<el-submenu index="2" >
 						<span  slot="title">普通用户功能</span>
 						<el-menu-item index="1-1" @click.native.prevent="iniForm">租车</el-menu-item>
-						<el-menu-item index="1-2"  disabled @click.native.prevent="showOrder">我的订单</el-menu-item>
+						<el-menu-item index="1-2" @click.native.prevent="showOrder(0)">还车</el-menu-item>
+						<el-menu-item index="1-3" @click.native.prevent="showOrder(1)">租车历史查看</el-menu-item>
 					</el-submenu>
 					<el-menu-item index="4" @click.native.prevent="logout">登出</a></el-menu-item>
 				</el-menu>
@@ -79,39 +80,56 @@
 								  </el-select>
 							</el-form-item>
 
-							<el-form-item label="租   期" prop="value1">
+							<el-form-item label="取车日期" prop="date1">
 								<el-date-picker
-								v-model="ruleForm.value1"
-								type="datetimerange"
-								range-separator="至"
-								start-placeholder="开始日期"
-								end-placeholder="结束日期">
+									v-model="ruleForm.date1"
+									type="date"
+									placeholder="选择日期">
 								</el-date-picker>
 							</el-form-item>
 
 							<el-form-item>
 							  <el-button type="primary" @click="checkForm('ruleForm')">提交订单</el-button>
 							  <el-button @click="resetForm('ruleForm')">重置</el-button>
-							  <el-col :span="10"><h3 class="days">租期:{{ruleForm.rentDays(ruleForm.value1)}}天<br>租金:{{ruleForm.total(optionss)}}元</h3></el-col>
+							  <el-col :span="10"><h3 class="days">每日租金: {{carPrice(optionss)}}元</h3></el-col>
 							</el-form-item>
-
-							<el-dialog title="扫码支付" :visible.sync="ruleForm.dialogFormVisible">
-									<el-image src="https://s3.ax1x.com/2020/12/11/rEtYlT.png"></el-image>
-									<div slot="footer" class="dialog-footer">
-									<el-button @click="ruleForm.dialogFormVisible = false">取 消</el-button>
-									<el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
-									</div>
-							</el-dialog>
-
 						  </el-form>
 					  </el-card>
+
+							<el-dialog title="扫码支付" :visible.sync="ruleForm.dialogFormVisible">
+								<div>
+										<el-date-picker
+											v-model="returnDate"
+											type="date"
+											placeholder="选择还车日期">
+										</el-date-picker>
+									</div>
+									<div>
+										<h1>开始日期：{{moment(beginDate).format("YYY-MM-DD")}}</h1>
+										<h1>日租金：{{perDayPrice}}</h1>
+										<h1>租车天数：{{days()}}</h1>
+										<h1>租车费用：{{total()}}</h1>
+									</div>
+									<div>
+									<el-image 
+										style="width: 200px; height: 200px"
+										src="https://s3.ax1x.com/2020/12/11/rEtYlT.png"
+										:preview-src-list="srcList">
+									</el-image>
+									</div>
+
+									<div slot="footer" class="dialog-footer">
+									<el-button @click="ruleForm.dialogFormVisible = false">取 消</el-button>
+									<el-button type="primary" @click="submitChenge">确 定</el-button>
+									</div>
+							</el-dialog>
 
 					  <el-card v-show="showOrders">
 						<el-table :data="tableList" :fit="true" :show-header="true" stripe="true">
 							<el-table-column v-for="(value, key) in this.tableListCol" :prop="key" :label="value"></el-table-column>
 							<el-table-column label="操作" fixed="right" width="200px">
 								<template slot-scope="scope">
-								<el-button mc-type="column-el-button" size="mini" type="primary"  icon="el-icon-edit" round>还车</el-button>
+								<el-button v-show="tableNo==0" mc-type="column-el-button" size="mini" type="primary" @click.native.prevent="handleRetronCar(scope.$index, scope.row)" icon="el-icon-edit" round>还车</el-button>
 								</template>
 							</el-table-column>
 						</el-table>

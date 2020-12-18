@@ -10,4 +10,6 @@ public interface CarMapper {
 	public int addCar(Map<String, Object> info);
 	public int deleteCar(int id);
 	public int modifyCar(Map<String, Object> info);
+	public List<Car> getCarsByStatus(String status);
+	//public int changeStatus(Map<String, Object> info);
 }
